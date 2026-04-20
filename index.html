@@ -1,47 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vaishali’s Beauty</title>
-
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="icon" href="assets/favicon.png">
-
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vaishali's Beauty</title>
+  <meta name="description" content="Professional beauty services with a personal touch. Facials, threading, waxing, makeup, mehndi, nails and massage." />
+  <link rel="icon" href="assets/favicon.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 </head>
-
 <body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="#top" class="brand" aria-label="Vaishali's Beauty home">
+        <img src="assets/logo-transparent.png" alt="Vaishali's Beauty logo" class="brand-logo" />
+      </a>
+      <nav class="nav">
+        <a href="#services">Services</a>
+        <a href="#why-us">Why Choose Us</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="btn btn-nav" href="https://wa.me/447599693034?text=Hi%20Vaishali%2C%20I%27d%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">Book Now</a>
+    </div>
+  </header>
 
-<header class="header">
-  <img src="assets/logo-transparent.png" class="logo">
-</header>
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Professional Beauty Services</span>
+          <h1>Luxury beauty care with a warm personal touch</h1>
+          <p>
+            Facials, threading, waxing, makeup, mehndi, nails and massage
+            in a calm, welcoming setting designed to help you look and feel your best.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://wa.me/447599693034?text=Hi%20Vaishali%2C%20I%27d%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">Book on WhatsApp</a>
+            <a class="btn btn-secondary" href="#services">View Services</a>
+          </div>
 
-<section class="hero">
-  <h1>Luxury Beauty & Care</h1>
-  <p>Enhancing your natural beauty with professional care</p>
-  <button>Book Appointment</button>
-</section>
+          <div class="hero-highlights">
+            <div class="highlight-card">
+              <strong>Beauty</strong>
+              <span>Premium treatments</span>
+            </div>
+            <div class="highlight-card">
+              <strong>Care</strong>
+              <span>Gentle, personal service</span>
+            </div>
+            <div class="highlight-card">
+              <strong>Confidence</strong>
+              <span>Feel your best every time</span>
+            </div>
+          </div>
+        </div>
 
-<section class="services">
-  <h2>Our Services</h2>
+        <div class="hero-visual">
+          <div class="visual-panel">
+            <img src="assets/logo-main.png" alt="Vaishali's Beauty full logo" class="hero-logo" />
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <div class="service-box">
-    <h3>Facials</h3>
-    <p>Relaxing and rejuvenating skin treatments</p>
-  </div>
+    <section class="intro-strip">
+      <div class="container intro-grid">
+        <div class="intro-card">
+          <span class="mini-title">What we offer</span>
+          <p>Professional beauty services with elegant presentation, clear booking options and a trusted personal experience.</p>
+        </div>
+        <div class="intro-card">
+          <span class="mini-title">Easy booking</span>
+          <p>Fast WhatsApp booking for quick enquiries, appointment requests and treatment information.</p>
+        </div>
+        <div class="intro-card">
+          <span class="mini-title">Premium feel</span>
+          <p>Clean, modern styling with a calm luxury finish that matches your brand identity.</p>
+        </div>
+      </div>
+    </section>
 
-  <div class="service-box">
-    <h3>Threading & Waxing</h3>
-    <p>Precise and gentle hair removal</p>
-  </div>
+    <section class="services-section" id="services">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Our Services</span>
+          <h2>Popular beauty treatments</h2>
+          <p>Choose from your most requested services and guide visitors toward booking quickly.</p>
+        </div>
 
-  <div class="service-box">
-    <h3>Makeup & Mehndi</h3>
-    <p>Elegant looks for special occasions</p>
-  </div>
+        <div class="services-grid">
+          <article class="service-card">
+            <div class="service-icon icon-gold">✦</div>
+            <h3>Facials</h3>
+            <p>Relaxing and rejuvenating skin treatments to refresh, restore and brighten your complexion.</p>
+          </article>
 
-</section>
+          <article class="service-card">
+            <div class="service-icon icon-green">✦</div>
+            <h3>Threading &amp; Waxing</h3>
+            <p>Precise hair removal treatments with a clean, smooth finish for everyday confidence.</p>
+          </article>
 
+          <article class="service-card">
+            <div class="service-icon icon-blue">✦</div>
+            <h3>Makeup &amp; Mehndi</h3>
+            <p>Elegant styling for special occasions, celebrations and memorable events.</p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon icon-gold">✦</div>
+            <h3>Nails</h3>
+            <p>Classic nail care treatments to keep hands and feet looking polished and beautiful.</p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon icon-green">✦</div>
+            <h3>Massage</h3>
+            <p>Relaxing treatments designed to ease tension, refresh the body and support wellbeing.</p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon icon-blue">✦</div>
+            <h3>Beauty Packages</h3>
+            <p>Flexible combinations for clients wanting a full pamper session with multiple services.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="why-section" id="why-us">
+      <div class="container why-grid">
+        <div class="why-copy">
+          <span class="eyebrow">Why Choose Us</span>
+          <h2>Designed to build trust and encourage bookings</h2>
+          <p>
+            This premium layout helps present your business professionally with a calm visual style,
+            strong calls to action and a clear service structure.
+          </p>
+          <ul class="check-list">
+            <li>Clean premium homepage layout</li>
+            <li>Mobile-friendly design for phone visitors</li>
+            <li>Fast WhatsApp booking flow</li>
+            <li>Luxury colour palette matching your brand</li>
+          </ul>
+        </div>
+
+        <div class="why-panel">
+          <div class="info-box">
+            <span class="mini-title">Booking method</span>
+            <h3>Quick WhatsApp enquiries</h3>
+            <p>Perfect for fast responses while keeping the process simple for both you and your clients.</p>
+            <a class="text-link" href="https://wa.me/447599693034?text=Hi%20Vaishali%2C%20I%27d%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">Start booking →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container cta-panel">
+        <div>
+          <span class="eyebrow">Ready to book?</span>
+          <h2>Let clients contact you in one tap</h2>
+          <p>Use WhatsApp to answer quickly, confirm appointments and turn more visitors into bookings.</p>
+        </div>
+        <a class="btn btn-primary" href="https://wa.me/447599693034?text=Hi%20Vaishali%2C%20I%27d%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">Book Appointment</a>
+      </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Contact</span>
+          <h2>Get in touch</h2>
+          <p>Simple contact options for phone, WhatsApp and future additions like email or location details.</p>
+        </div>
+
+        <div class="contact-grid">
+          <a class="contact-card" href="tel:07599693034">
+            <span class="contact-label">Phone</span>
+            <strong>07599 693034</strong>
+            <span>Tap to call</span>
+          </a>
+
+          <a class="contact-card" href="https://wa.me/447599693034?text=Hi%20Vaishali%2C%20I%27d%20like%20to%20book%20an%20appointment." target="_blank" rel="noopener">
+            <span class="contact-label">WhatsApp</span>
+            <strong>Book Appointment</strong>
+            <span>Fastest way to enquire</span>
+          </a>
+
+          <div class="contact-card">
+            <span class="contact-label">Opening Style</span>
+            <strong>By Appointment</strong>
+            <span>Flexible beauty bookings</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <p>© 2026 Vaishali's Beauty. All rights reserved.</p>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
 </body>
 </html>

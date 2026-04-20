@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book | Vaishali's Beauty</title>
+  <link rel="icon" href="assets/favicon.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html"><img src="assets/logo-transparent.png" alt="Vaishali's Beauty" class="brand-logo" /></a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="#booking-form">Booking</a>
+        <a href="#feedback-form">Feedback</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+      <a class="btn btn-secondary" href="index.html">Back to Home</a>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Booking page</span>
+        <h2>Choose services, see the total, then book</h2>
+        <p>This page is kept focused: services, total, date, time, WhatsApp confirmation and collision checking.</p>
+      </div>
+
+      <div class="grid-2">
+        <section class="form-card card" id="booking-form">
+          <h3 style="font-size:36px">Make a booking</h3>
+          <p class="small">Select one or more services. The total updates automatically.</p>
+
+          <div class="services-list" id="servicesList"></div>
+
+          <div class="top-gap total-box">
+            <strong>Total:</strong>
+            <span id="bookingTotal">£0</span>
+          </div>
+
+          <div class="form-grid top-gap">
+            <div>
+              <label for="customerName">Your name</label>
+              <input id="customerName" placeholder="Full name" />
+            </div>
+            <div>
+              <label for="customerPhone">Phone number</label>
+              <input id="customerPhone" placeholder="07..." />
+            </div>
+            <div>
+              <label for="bookingDate">Date</label>
+              <input id="bookingDate" type="date" />
+            </div>
+            <div>
+              <label for="bookingTime">Time</label>
+              <select id="bookingTime">
+                <option value="">Select a time</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="top-gap">
+            <label for="bookingNotes">Notes</label>
+            <textarea id="bookingNotes" placeholder="Optional notes"></textarea>
+          </div>
+
+          <div class="notice top-gap">
+            <div><strong>How it works</strong></div>
+            <div class="small">When the slot is available, the booking is saved to the backend, then WhatsApp opens with the same details prefilled for the customer.</div>
+          </div>
+
+          <div id="bookingError" class="error top-gap hidden"></div>
+          <div id="bookingSuccess" class="success top-gap hidden"></div>
+
+          <div style="display:flex;gap:12px;flex-wrap:wrap" class="top-gap">
+            <button class="btn btn-primary" id="submitBookingBtn">Save booking + open WhatsApp</button>
+            <a class="btn btn-secondary" href="index.html">Cancel</a>
+          </div>
+        </section>
+
+        <aside class="form-card card">
+          <h3 style="font-size:36px">Live summary</h3>
+          <div class="info-box">
+            <div><strong>Selected services</strong></div>
+            <div id="selectedServicesText" class="small">No services selected yet.</div>
+          </div>
+
+          <div class="info-box top-gap">
+            <div><strong>Date and time</strong></div>
+            <div id="selectedDateTimeText" class="small">Choose a date and time.</div>
+          </div>
+
+          <div class="info-box top-gap">
+            <div><strong>Collision check</strong></div>
+            <div id="collisionText" class="small">Available slots will be shown once you pick a date.</div>
+          </div>
+
+          <div class="info-box top-gap">
+            <div><strong>Available hours</strong></div>
+            <div class="small">Default slots: 9:00 AM to 6:30 PM every 30 minutes. Existing bookings are removed from the dropdown.</div>
+          </div>
+        </aside>
+      </div>
+
+      <section class="section" id="feedback-form" style="padding-bottom:0">
+        <div class="grid-2">
+          <div class="form-card card">
+            <h3 style="font-size:36px">Leave feedback</h3>
+            <p class="small">Customers can send feedback after treatment.</p>
+            <div class="form-grid">
+              <div>
+                <label for="feedbackName">Your name</label>
+                <input id="feedbackName" placeholder="Your name" />
+              </div>
+              <div>
+                <label for="feedbackRating">Rating</label>
+                <select id="feedbackRating">
+                  <option value="5">5 stars</option>
+                  <option value="4">4 stars</option>
+                  <option value="3">3 stars</option>
+                  <option value="2">2 stars</option>
+                  <option value="1">1 star</option>
+                </select>
+              </div>
+            </div>
+            <div class="top-gap">
+              <label for="feedbackText">Feedback</label>
+              <textarea id="feedbackText" placeholder="Tell us about your experience"></textarea>
+            </div>
+            <div id="feedbackMsg" class="small top-gap"></div>
+            <button class="btn btn-primary top-gap" id="submitFeedbackBtn">Send feedback</button>
+          </div>
+
+          <div class="form-card card">
+            <h3 style="font-size:36px">Approved feedback</h3>
+            <div id="approvedFeedbackList" class="feedback-list"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    const TIME_SLOTS = [
+      "9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM",
+      "12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM",
+      "3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM","5:30 PM","6:00 PM","6:30 PM"
+    ];
+
+    const servicesList = document.getElementById("servicesList");
+    const bookingTotal = document.getElementById("bookingTotal");
+    const selectedServicesText = document.getElementById("selectedServicesText");
+    const selectedDateTimeText = document.getElementById("selectedDateTimeText");
+    const collisionText = document.getElementById("collisionText");
+    const bookingTime = document.getElementById("bookingTime");
+    const bookingDate = document.getElementById("bookingDate");
+    const bookingError = document.getElementById("bookingError");
+    const bookingSuccess = document.getElementById("bookingSuccess");
+
+    function renderServices() {
+      servicesList.innerHTML = window.SERVICES.map(s => `
+        <label class="service-option">
+          <input type="checkbox" value="${s.id}" class="service-check" />
+          <div>
+            <div><strong>${s.name}</strong></div>
+            <div class="small">£${s.price}</div>
+          </div>
+        </label>
+      `).join("");
+      document.querySelectorAll(".service-check").forEach(el => el.addEventListener("change", updateSummary));
+    }
+
+    function getSelectedIds() {
+      return [...document.querySelectorAll(".service-check:checked")].map(el => el.value);
+    }
+
+    function updateSummary() {
+      const ids = getSelectedIds();
+      const services = selectedServiceObjects(ids);
+      const total = selectedTotal(ids);
+      bookingTotal.textContent = formatCurrency(total);
+      selectedServicesText.textContent = services.length ? services.map(s => `${s.name} (£${s.price})`).join(", ") : "No services selected yet.";
+      selectedDateTimeText.textContent = bookingDate.value && bookingTime.value ? `${bookingDate.value} at ${bookingTime.value}` : "Choose a date and time.";
+    }
+
+    async function loadAvailableTimes() {
+      bookingTime.innerHTML = `<option value="">Select a time</option>`;
+      collisionText.textContent = "Pick a date to check collisions.";
+      if (!bookingDate.value) return;
+      try {
+        const sb = await getSupabaseClient();
+        const { data, error } = await sb
+          .from("bookings")
+          .select("time,status")
+          .eq("date", bookingDate.value)
+          .in("status", ["pending","confirmed"]);
+        if (error) throw error;
+        const booked = new Set((data || []).map(r => r.time));
+        const available = TIME_SLOTS.filter(t => !booked.has(t));
+        available.forEach(t => {
+          const opt = document.createElement("option");
+          opt.value = t;
+          opt.textContent = t;
+          bookingTime.appendChild(opt);
+        });
+        collisionText.textContent = available.length ? "Available slots updated. Existing bookings were removed." : "No slots left for this date.";
+      } catch (e) {
+        collisionText.textContent = "Could not check availability yet. Configure Supabase first.";
+      }
+      updateSummary();
+    }
+
+    async function submitBooking() {
+      bookingError.classList.add("hidden");
+      bookingSuccess.classList.add("hidden");
+      const ids = getSelectedIds();
+      const services = selectedServiceObjects(ids);
+      const total = selectedTotal(ids);
+      const name = document.getElementById("customerName").value.trim();
+      const phone = document.getElementById("customerPhone").value.trim();
+      const date = bookingDate.value;
+      const time = bookingTime.value;
+      const notes = document.getElementById("bookingNotes").value.trim();
+
+      if (!services.length || !name || !phone || !date || !time) {
+        bookingError.textContent = "Please choose services and complete name, phone, date and time.";
+        bookingError.classList.remove("hidden");
+        return;
+      }
+
+      try {
+        const sb = await getSupabaseClient();
+
+        const { data: existing, error: existingError } = await sb
+          .from("bookings")
+          .select("id")
+          .eq("date", date)
+          .eq("time", time)
+          .in("status", ["pending","confirmed"])
+          .limit(1);
+        if (existingError) throw existingError;
+        if (existing && existing.length) {
+          bookingError.textContent = "That slot has just been taken. Please choose another time.";
+          bookingError.classList.remove("hidden");
+          await loadAvailableTimes();
+          return;
+        }
+
+        const payload = {
+          customer_name: name,
+          customer_phone: phone,
+          date,
+          time,
+          services: services.map(s => ({ id: s.id, name: s.name, price: s.price })),
+          total,
+          notes,
+          status: "pending"
+        };
+
+        const { data, error } = await sb.from("bookings").insert(payload).select();
+        if (error) throw error;
+
+        bookingSuccess.textContent = "Booking saved. Opening WhatsApp now.";
+        bookingSuccess.classList.remove("hidden");
+        openWhatsAppBooking({
+          name,
+          phone,
+          date,
+          time,
+          services: services.map(s => s.name),
+          total,
+          notes
+        });
+        await loadAvailableTimes();
+      } catch (e) {
+        bookingError.textContent = e.message || "Booking failed. Check your Supabase setup.";
+        bookingError.classList.remove("hidden");
+      }
+    }
+
+    async function submitFeedback() {
+      const name = document.getElementById("feedbackName").value.trim();
+      const rating = Number(document.getElementById("feedbackRating").value);
+      const text = document.getElementById("feedbackText").value.trim();
+      const box = document.getElementById("feedbackMsg");
+      box.textContent = "";
+      if (!name || !text) {
+        box.textContent = "Please add your name and feedback.";
+        return;
+      }
+      try {
+        const sb = await getSupabaseClient();
+        const { error } = await sb.from("feedback").insert({
+          customer_name: name,
+          rating,
+          message: text,
+          approved: false
+        });
+        if (error) throw error;
+        box.textContent = "Thank you. Your feedback has been sent for review.";
+        document.getElementById("feedbackName").value = "";
+        document.getElementById("feedbackText").value = "";
+      } catch (e) {
+        box.textContent = e.message || "Could not send feedback yet.";
+      }
+    }
+
+    async function loadApprovedFeedback() {
+      const list = document.getElementById("approvedFeedbackList");
+      list.innerHTML = "";
+      try {
+        const sb = await getSupabaseClient();
+        const { data, error } = await sb
+          .from("feedback")
+          .select("customer_name,rating,message")
+          .eq("approved", true)
+          .order("created_at", { ascending: false })
+          .limit(6);
+        if (error) throw error;
+        if (!data || !data.length) {
+          list.innerHTML = `<div class="feedback-item card"><p>No feedback approved yet.</p></div>`;
+          return;
+        }
+        list.innerHTML = data.map(item => `
+          <article class="feedback-item card">
+            <p>“${item.message}”</p>
+            <strong>${item.customer_name} · ${"★".repeat(item.rating || 5)}</strong>
+          </article>
+        `).join("");
+      } catch (e) {
+        list.innerHTML = `<div class="feedback-item card"><p class="small">Approved feedback will appear here after setup.</p></div>`;
+      }
+    }
+
+    renderServices();
+    bookingDate.addEventListener("change", loadAvailableTimes);
+    bookingTime.addEventListener("change", updateSummary);
+    document.getElementById("submitBookingBtn").addEventListener("click", submitBooking);
+    document.getElementById("submitFeedbackBtn").addEventListener("click", submitFeedback);
+    loadApprovedFeedback();
+  </script>
+</body>
+</html>

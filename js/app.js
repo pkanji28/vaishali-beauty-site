@@ -13,6 +13,7 @@ window.SERVICES = [
   { id: "s12", name: "Head Massage", price: 15 },
   { id: "s13", name: "Simple Hair & Makeup", price: 70 },
   { id: "s14", name: "Mehndi — Simple Line One Hand Front", price: 5 }
+  { id: "s15", name: "Hollywood Hot Waxing", price: 25 },
 ];
 
 function formatCurrency(value) {

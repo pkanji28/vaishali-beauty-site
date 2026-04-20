@@ -1,139 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vaishali's Beauty</title>
-  <meta name="description" content="Simple beauty booking website with service selection, total pricing and WhatsApp booking." />
-  <link rel="icon" href="assets/favicon.png" />
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-</head>
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vaishali's Beauty</title>
+<link rel="icon" href="assets/favicon.png"/><link rel="stylesheet" href="css/styles.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/></head>
 <body>
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a href="index.html" class="brand" aria-label="Vaishali's Beauty home"><img src="assets/logo-transparent.png" alt="Vaishali's Beauty" class="brand-logo" /></a>
-      <nav class="nav">
-        <a href="#services">Services</a>
-        <a href="#prices">Prices</a>
-        <a href="#feedback">Feedback</a>
-        <a href="book.html">Book</a>
-      </nav>
-      <a class="btn btn-primary" href="book.html">Book Now</a>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="container hero-grid">
-        <div>
-          <span class="eyebrow">Simple booking website</span>
-          <h1>Select services, see your total, then book your appointment</h1>
-          <p class="lead">This homepage is intentionally condensed. Customers can go straight to one dedicated booking page for service selection, date, time and WhatsApp confirmation.</p>
-          <div style="display:flex;gap:12px;flex-wrap:wrap">
-            <a class="btn btn-primary" href="book.html">Go to Booking Page</a>
-            <a class="btn btn-secondary" href="#prices">See Prices</a>
-          </div>
-
-          <div class="quick-grid">
-            <div class="pill"><strong>1. Choose services</strong><div class="small">Add treatments and see the total instantly.</div></div>
-            <div class="pill"><strong>2. Pick date & time</strong><div class="small">Only available slots can be booked.</div></div>
-            <div class="pill"><strong>3. Send booking</strong><div class="small">Booking details go to WhatsApp and your admin panel.</div></div>
-          </div>
-        </div>
-        <div class="hero-card card">
-          <img src="assets/logo-main.png" alt="Vaishali's Beauty logo" />
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="services">
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">Services</span>
-          <h2>Popular treatments</h2>
-          <p>Keep the homepage short. Customers can choose full details on the booking page.</p>
-        </div>
-        <div class="grid-3">
-          <article class="service-card card">
-            <div class="service-icon icon-gold">✦</div>
-            <h3>Facials</h3>
-            <p class="small">Aroma Facial, deep cleansing and skin care treatments.</p>
-          </article>
-          <article class="service-card card">
-            <div class="service-icon icon-green">✦</div>
-            <h3>Threading & Waxing</h3>
-            <p class="small">Eyebrows, upper lip, full face, arms, legs and more.</p>
-          </article>
-          <article class="service-card card">
-            <div class="service-icon icon-blue">✦</div>
-            <h3>Beauty Extras</h3>
-            <p class="small">Mehndi, manicure, pedicure, massage and hair & makeup.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="prices" style="padding-top:0">
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">Prices</span>
-          <h2>Quick sample pricing</h2>
-          <p>Customers can view the rest during booking.</p>
-        </div>
-        <div class="grid-3">
-          <div class="price-card card">
-            <h3>Threading</h3>
-            <ul>
-              <li><span>Eyebrow Threading</span><strong>£3</strong></li>
-              <li><span>Upper Lip Threading</span><strong>£2</strong></li>
-              <li><span>Full Face Threading</span><strong>£8</strong></li>
-            </ul>
-          </div>
-          <div class="price-card card">
-            <h3>Waxing</h3>
-            <ul>
-              <li><span>Full Leg Waxing</span><strong>£18</strong></li>
-              <li><span>Half Leg Waxing</span><strong>£9</strong></li>
-              <li><span>Full Arm Waxing</span><strong>£10</strong></li>
-            </ul>
-          </div>
-          <div class="price-card card">
-            <h3>Beauty & Care</h3>
-            <ul>
-              <li><span>Aroma Facial</span><strong>£35</strong></li>
-              <li><span>Manicure</span><strong>£15</strong></li>
-              <li><span>Pedicure</span><strong>£25</strong></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="feedback">
-      <div class="container">
-        <div class="cta-panel card">
-          <div>
-            <span class="eyebrow">Customer feedback</span>
-            <h2 style="font-size:40px">Clients can leave feedback after their appointment</h2>
-            <p class="lead" style="margin:0">Feedback is stored in the backend and can be approved from the admin page before showing publicly.</p>
-          </div>
-          <div style="display:flex;gap:12px;flex-wrap:wrap">
-            <a class="btn btn-primary" href="book.html#feedback-form">Leave Feedback</a>
-            <a class="btn btn-secondary" href="admin.html">Admin Login</a>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container" style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
-      <div>© 2026 Vaishali's Beauty</div>
-      <div><a href="book.html">Booking page</a> · <a href="admin.html">Admin</a></div>
-    </div>
-  </footer>
-</body>
-</html>
+<header class="site-header"><div class="container nav-wrap">
+<a href="index.html"><img src="assets/logo-transparent.png" alt="Vaishali's Beauty" class="brand-logo"/></a>
+<nav class="nav"><a href="#prices">Prices</a><a href="book.html">Book</a><a href="book.html#feedback-form">Feedback</a><a href="admin.html">Admin</a></nav>
+<a class="btn btn-primary" href="book.html">Book Now</a></div></header>
+<main>
+<section class="hero"><div class="container hero-grid">
+<div><span class="eyebrow">Simple booking website</span><h1>Select services, see your total, then book your appointment</h1>
+<p class="lead">The homepage is condensed. Customers go straight to one booking page where they choose services, see the total, pick a date and time, then confirm on WhatsApp.</p>
+<div class="price-link-row"><a class="btn btn-primary" href="book.html">Go to Booking Page</a><a class="btn btn-secondary" href="#prices">See Prices</a></div></div>
+<div class="hero-card card"><img src="assets/logo-main.png" alt="Vaishali's Beauty logo"/></div></div></section>
+<section class="section" id="prices" style="padding-top:12px"><div class="container">
+<div class="section-head"><span class="eyebrow">Prices</span><h2>Quick price guide</h2><p>Full selection happens on the booking page.</p></div>
+<div class="grid-3">
+<div class="price-card card"><h3>Threading</h3><ul><li><span>Eyebrow Threading</span><strong>£3</strong></li><li><span>Upper Lip Threading</span><strong>£2</strong></li><li><span>Full Face Threading</span><strong>£8</strong></li></ul></div>
+<div class="price-card card"><h3>Waxing</h3><ul><li><span>Full Leg Waxing</span><strong>£18</strong></li><li><span>Half Leg Waxing</span><strong>£9</strong></li><li><span>Full Arm Waxing</span><strong>£10</strong></li></ul></div>
+<div class="price-card card"><h3>Beauty & Care</h3><ul><li><span>Aroma Facial</span><strong>£35</strong></li><li><span>Manicure</span><strong>£15</strong></li><li><span>Pedicure</span><strong>£25</strong></li></ul></div>
+</div>
+<div class="cta-panel card top-gap"><div><span class="eyebrow">Customer feedback</span><h2 style="font-size:38px">Clients can leave feedback after their appointment</h2><p class="lead" style="margin:0">Feedback is stored in the backend and can be approved from the admin page before showing publicly.</p></div><div class="price-link-row"><a class="btn btn-primary" href="book.html#feedback-form">Leave Feedback</a><a class="btn btn-secondary" href="admin.html">Admin Login</a></div></div>
+</div></section></main>
+<footer><div class="container" style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap"><div>© 2026 Vaishali's Beauty</div><div><a href="book.html">Booking page</a> · <a href="admin.html">Admin</a></div></div></footer>
+</body></html>

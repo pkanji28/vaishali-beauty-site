@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,15 +33,15 @@
   <main class="section">
     <div class="container">
       <div class="section-head">
-        <div class="kicker">Booking Page</div>
-        <h2>Choose services, see your total, then book</h2>
-        <p>Professional layout on mobile and desktop. Services are categorised clearly and aligned neatly.</p>
+        <div class="kicker">Quantity Booking Build</div>
+        <h2>Choose services, set quantities, see your total, then book</h2>
+        <p>Each service now has + and − controls. Quantity goes to zero to remove the item automatically.</p>
       </div>
 
       <div class="booking-shell">
         <section class="panel" id="booking-form">
           <h3>Make a booking</h3>
-          <p class="small">Select one or more services. The total updates automatically.</p>
+          <p class="small">Tap + to add services and − to reduce or remove them. Total updates instantly.</p>
 
           <div id="servicesList"></div>
 
@@ -79,8 +78,8 @@
           <div class="notice" style="margin-top:16px">
             <strong>How it works</strong>
             <div class="small" style="margin-top:6px">
-              Choose services, then select a date. Available times load automatically. If the slot is free,
-              the booking is saved and WhatsApp opens with the booking details already filled in.
+              Add quantities, choose date and time, then save the booking. If the slot is free,
+              the booking is stored and WhatsApp opens with the same details including quantities.
             </div>
           </div>
 
@@ -166,6 +165,7 @@
   <script src="js/app.js"></script>
   <script>
     const TIME_SLOTS = ["9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM","5:30 PM","6:00 PM","6:30 PM"];
+    const quantities = {};
     const servicesList = document.getElementById("servicesList");
     const bookingTotal = document.getElementById("bookingTotal");
     const stickyTotal = document.getElementById("stickyTotal");
@@ -182,8 +182,15 @@
       return date.toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
     }
 
-    function getSelectedIds() {
-      return [...document.querySelectorAll(".service-check:checked")].map(input => input.value);
+    function getSelectedItems() {
+      return selectedServiceObjectsFromQuantities(quantities);
+    }
+
+    function setQuantity(serviceId, nextQty) {
+      if (nextQty <= 0) delete quantities[serviceId];
+      else quantities[serviceId] = nextQty;
+      renderQuantities();
+      updateSummary();
     }
 
     function renderServices() {
@@ -193,37 +200,72 @@
           <h4 class="service-category-title">${category}</h4>
           <div class="service-picker">
             ${items.map(service => `
-              <label class="service-option" data-id="${service.id}">
-                <input type="checkbox" class="service-check" value="${service.id}"/>
-                <div class="service-option-content">
-                  <strong>${service.name}</strong>
-                  <div class="small">£${service.price}</div>
+              <div class="service-option" data-id="${service.id}">
+                <div class="service-option-main">
+                  <div class="service-option-icon">✦</div>
+                  <div class="service-option-content">
+                    <strong>${service.name}</strong>
+                    <div class="small">£${service.price} each</div>
+                  </div>
                 </div>
-              </label>
+                <div class="quantity-box">
+                  <button type="button" class="qty-btn qty-minus" data-id="${service.id}">−</button>
+                  <div class="qty-display" id="qty-${service.id}">0</div>
+                  <button type="button" class="qty-btn qty-plus" data-id="${service.id}">+</button>
+                </div>
+              </div>
             `).join("")}
           </div>
         </section>
       `).join("");
 
-      document.querySelectorAll(".service-check").forEach(input => {
-        input.addEventListener("change", updateSummary);
+      document.querySelectorAll(".qty-plus").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-id");
+          setQuantity(id, Number(quantities[id] || 0) + 1);
+        });
+      });
+
+      document.querySelectorAll(".qty-minus").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-id");
+          setQuantity(id, Number(quantities[id] || 0) - 1);
+        });
+      });
+
+      renderQuantities();
+    }
+
+    function renderQuantities() {
+      document.querySelectorAll(".service-option").forEach(option => {
+        const id = option.getAttribute("data-id");
+        const qty = Number(quantities[id] || 0);
+        const target = document.getElementById(`qty-${id}`);
+        if (target) target.textContent = qty;
+        option.classList.toggle("selected", qty > 0);
       });
     }
 
     function updateSummary() {
-      const ids = getSelectedIds();
-      document.querySelectorAll(".service-option").forEach(option => {
-        const id = option.getAttribute("data-id");
-        option.classList.toggle("selected", ids.includes(id));
-      });
-
-      const services = selectedServiceObjects(ids);
-      const total = selectedTotal(ids);
+      const services = getSelectedItems();
+      const total = selectedTotalFromQuantities(quantities);
       bookingTotal.textContent = formatCurrency(total);
       stickyTotal.textContent = formatCurrency(total);
-      selectedServicesText.textContent = services.length
-        ? services.map(service => `${service.name} (£${service.price})`).join(", ")
-        : "No services selected yet.";
+
+      if (services.length) {
+        selectedServicesText.innerHTML = `
+          <ul class="summary-list">
+            ${services.map(service => `
+              <li>
+                <span>${service.name} <span class="inline-muted">× ${service.quantity}</span></span>
+                <strong>£${service.lineTotal}</strong>
+              </li>
+            `).join("")}
+          </ul>
+        `;
+      } else {
+        selectedServicesText.textContent = "No services selected yet.";
+      }
 
       selectedDateTimeText.textContent = bookingDate.value && bookingTime.value
         ? `${formatDateReadable(bookingDate.value)} at ${bookingTime.value}`
@@ -282,14 +324,18 @@
         "📅 Date: " + formatDateReadable(payload.date),
         "⏰ Time: " + payload.time,
         "",
-        "💄 Services:",
-        ...payload.services.map(service => "• " + service),
-        "",
-        "💷 Total: £" + payload.total,
-        payload.notes ? "📝 Notes: " + payload.notes : "",
-        "",
-        "Please confirm my appointment. Thank you 😊"
-      ].filter(Boolean);
+        "💄 Services:"
+      ];
+
+      payload.services.forEach(service => {
+        lines.push(`• ${service.name} × ${service.quantity} — £${service.lineTotal}`);
+      });
+
+      lines.push("");
+      lines.push("💷 Total: £" + payload.total);
+      if (payload.notes) lines.push("📝 Notes: " + payload.notes);
+      lines.push("");
+      lines.push("Please confirm my appointment. Thank you 😊");
 
       window.open("https://wa.me/447599693034?text=" + encodeURIComponent(lines.join("\n")), "_blank");
     }
@@ -298,9 +344,8 @@
       bookingError.classList.add("hidden");
       bookingSuccess.classList.add("hidden");
 
-      const ids = getSelectedIds();
-      const services = selectedServiceObjects(ids);
-      const total = selectedTotal(ids);
+      const services = getSelectedItems();
+      const total = selectedTotalFromQuantities(quantities);
       const name = document.getElementById("customerName").value.trim();
       const phone = document.getElementById("customerPhone").value.trim();
       const booking_date = bookingDate.value;
@@ -308,7 +353,7 @@
       const notes = document.getElementById("bookingNotes").value.trim();
 
       if (!services.length || !name || !phone || !booking_date || !booking_time) {
-        bookingError.textContent = "Please choose services and complete name, phone, date and time.";
+        bookingError.textContent = "Please add at least one service and complete name, phone, date and time.";
         bookingError.classList.remove("hidden");
         return;
       }
@@ -332,14 +377,17 @@
           return;
         }
 
+        const serviceSummary = services.map(service => `${service.name} x${service.quantity}`).join(", ");
+
         const payload = {
           customer_name: name,
           customer_phone: phone,
-          service: services.map(service => service.name).join(", "),
+          service: serviceSummary,
           total: total,
           booking_date: booking_date,
           booking_time: booking_time,
-          status: "pending"
+          status: "pending",
+          notes: notes
         };
 
         const { error } = await sb.from("bookings").insert(payload);
@@ -353,7 +401,7 @@
           phone,
           date: booking_date,
           time: booking_time,
-          services: services.map(service => service.name),
+          services,
           total,
           notes
         });
@@ -431,6 +479,7 @@
     document.getElementById("submitBookingBtn").addEventListener("click", submitBooking);
     document.getElementById("submitFeedbackBtn").addEventListener("click", submitFeedback);
     loadApprovedFeedback();
+    updateSummary();
   </script>
 </body>
 </html>

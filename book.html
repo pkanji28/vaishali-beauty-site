@@ -11,20 +11,17 @@
     <div class="container header-inner">
       <a class="brand" href="index.html">
         <div class="brand-mark">VB</div>
-        <div>
+        <div class="brand-copy">
           <h1>Vaishali's Beauty</h1>
           <p>Beauty • Care • Confidence</p>
         </div>
       </a>
-
       <nav class="nav">
         <a href="index.html">Home</a>
         <a href="book.html" class="active">Booking</a>
         <a href="feedback.html">Feedback</a>
         <a href="admin.html">Admin</a>
       </nav>
-
-      <a class="btn btn-secondary hide-mobile" href="index.html">Back to Home</a>
     </div>
   </header>
 
@@ -54,7 +51,6 @@
                 <label for="customerName">Your name</label>
                 <input id="customerName" name="customerName" type="text" placeholder="Full name" required />
               </div>
-
               <div class="form-group">
                 <label for="customerPhone">Phone number</label>
                 <input id="customerPhone" name="customerPhone" type="tel" placeholder="07..." required />
@@ -66,7 +62,6 @@
                 <label for="bookingDate">Date</label>
                 <input id="bookingDate" name="bookingDate" type="date" required />
               </div>
-
               <div class="form-group">
                 <label for="bookingTime">Time</label>
                 <select id="bookingTime" name="bookingTime" required>
@@ -82,10 +77,7 @@
 
             <div class="helper-card">
               <h4>How it works</h4>
-              <p>
-                Choose services, then select a date. Available times load automatically.
-                If the slot is free, the booking is stored and WhatsApp opens with the same details.
-              </p>
+              <p>Choose services, then select a date. Available times load automatically. If the slot is free, the booking is stored and WhatsApp opens with the same details.</p>
             </div>
 
             <p id="bookingMessage" class="status-message"></p>
@@ -99,22 +91,18 @@
 
         <aside class="panel side-panel">
           <h3>Live summary</h3>
-
           <div class="summary-card">
             <h4>Selected services</h4>
             <div id="selectedServicesSummary" class="summary-list muted">No services selected yet.</div>
           </div>
-
           <div class="summary-card">
             <h4>Date and time</h4>
             <div id="dateTimeSummary" class="muted">Choose a date first, then a time.</div>
           </div>
-
           <div class="summary-card">
             <h4>Availability check</h4>
             <div id="availabilitySummary" class="muted">Select a date to load available times.</div>
           </div>
-
           <div class="summary-card">
             <h4>Total</h4>
             <div id="summaryTotal" class="summary-total">£0</div>

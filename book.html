@@ -33,8 +33,27 @@ function openWhatsAppBooking(payload){
 }
 
 function renderServices(){
-  servicesList.innerHTML=window.SERVICES.map(service=>'<label class="service-option" data-id="'+service.id+'"><input type="checkbox" value="'+service.id+'" class="service-check"/><div><div><strong>'+service.name+'</strong></div><div class="small">£'+service.price+'</div></div></label>').join("");
-  document.querySelectorAll(".service-check").forEach(input=>input.addEventListener("change",updateSummary));
+  const groups = groupedServices();
+  servicesList.innerHTML = Object.entries(groups).map(([category, items]) => `
+    <section class="service-category">
+      <h4 class="service-category-title">${category}</h4>
+      <div class="service-picker">
+        ${items.map(service => `
+          <label class="service-option" data-id="${service.id}">
+            <input type="checkbox" value="${service.id}" class="service-check"/>
+            <div class="service-option-content">
+              <strong>${service.name}</strong>
+              <div class="small">£${service.price}</div>
+            </div>
+          </label>
+        `).join("")}
+      </div>
+    </section>
+  `).join("");
+
+  document.querySelectorAll(".service-check").forEach(input => {
+    input.addEventListener("change", updateSummary);
+  });
 }
 
 function getSelectedIds(){ return [...document.querySelectorAll(".service-check:checked")].map(input=>input.value); }

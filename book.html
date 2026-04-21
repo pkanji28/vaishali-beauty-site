@@ -194,30 +194,43 @@
     }
 
     function renderServices() {
-      const groups = groupedServices();
-      servicesList.innerHTML = Object.entries(groups).map(([category, items]) => `
-        <section class="service-category">
-          <h4 class="service-category-title">${category}</h4>
-          <div class="service-picker">
-            ${items.map(service => `
-              <div class="service-option" data-id="${service.id}">
-                <div class="service-option-main">
-                  <div class="service-option-icon">✦</div>
-                  <div class="service-option-content">
-                    <strong>${service.name}</strong>
-                    <div class="small">£${service.price} each</div>
-                  </div>
+  const groups = groupedServices();
+
+  servicesList.innerHTML = Object.entries(groups).map(([category, items]) => `
+    <section class="service-category">
+      <h4 class="service-category-title">${category}</h4>
+
+      <div class="service-picker">
+        ${items.map(service => `
+          <div class="service-option" data-id="${service.id}">
+            
+            <div class="service-option-main">
+              
+              <div class="service-option-icon">✦</div>
+
+              <div class="service-option-row">
+
+                <div class="service-option-content">
+                  <strong>${service.name}</strong>
+                  <div class="small">£${service.price} each</div>
                 </div>
+
                 <div class="quantity-box">
                   <button type="button" class="qty-btn qty-minus" data-id="${service.id}">−</button>
                   <div class="qty-display" id="qty-${service.id}">0</div>
                   <button type="button" class="qty-btn qty-plus" data-id="${service.id}">+</button>
                 </div>
+
               </div>
-            `).join("")}
+
+            </div>
+
           </div>
-        </section>
-      `).join("");
+        `).join("")}
+      </div>
+    </section>
+  `).join("");
+    }
 
       document.querySelectorAll(".qty-plus").forEach(btn => {
         btn.addEventListener("click", () => {

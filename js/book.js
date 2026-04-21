@@ -155,23 +155,31 @@
     updateBookingUI();
   }
 
+  function formatDisplayDate(dateStr) {
+    const date = new Date(dateStr + "T00:00:00");
+    return date.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  }
+
   function buildWhatsAppMessage(payload) {
-    const serviceLines = payload.services.map(item => `• ${item.name} × ${item.quantity} — £${item.price * item.quantity}`).join("\n");
+    const serviceLines = payload.services.map(item => {
+      const qtyText = item.quantity > 1 ? ` × ${item.quantity}` : "";
+      return `• ${item.name}${qtyText}`;
+    }).join("\n");
+
     return [
-      "Hi Vaishali! I'd like to book:",
+      "✨✨ Vaishali's Beauty Booking ✨✨",
       "",
+      `👤 Name: ${payload.customerName}`,
+      `📞 Phone: ${payload.customerPhone}`,
+      `🗓️ Date: ${formatDisplayDate(payload.date)}`,
+      `⏰ Time: ${payload.time}`,
+      "💄 Services:",
       serviceLines,
+      `💷 Total: £${payload.total}`,
+      `📝 Notes: ${payload.notes || "None"}`,
       "",
-      `Date: ${payload.date}`,
-      `Time: ${payload.time}`,
-      `Total: £${payload.total}`,
-      "",
-      `Name: ${payload.customerName}`,
-      `Phone: ${payload.customerPhone}`,
-      `Notes: ${payload.notes || "None"}`,
-      "",
-      "Please confirm my appointment. Thank you!",
-      "🌸"
+      "Please confirm my appointment. Thank you 😊",
+      "😊"
     ].join("\n");
   }
 

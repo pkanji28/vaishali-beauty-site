@@ -1,4 +1,3 @@
-
 (function () {
   const feedbackForm = document.getElementById("feedbackForm");
   const feedbackMessage = document.getElementById("feedbackMessage");
@@ -10,7 +9,6 @@
       approvedFeedbackList.innerHTML = '<div class="feedback-item"><strong>No approved feedback yet.</strong><small>New approved reviews will appear here.</small></div>';
       return;
     }
-
     approvedFeedbackList.innerHTML = items.map(item => `
       <article class="feedback-item">
         <strong>${item.name}</strong>
@@ -37,14 +35,7 @@
     }
 
     const items = VBStore.getFeedback();
-    items.unshift({
-      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-      name,
-      rating,
-      text,
-      approved: false,
-      createdAt: new Date().toISOString()
-    });
+    items.unshift({ id: String(Date.now()), name, rating, text, approved: false, createdAt: new Date().toISOString() });
     VBStore.saveFeedback(items);
 
     feedbackMessage.textContent = "Feedback submitted. It will appear publicly after approval.";

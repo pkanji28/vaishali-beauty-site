@@ -1,14 +1,10 @@
-
 (function () {
   const adminPin = (window.VB_CONFIG && window.VB_CONFIG.adminPin) || "1234";
-
-  const adminLoginSection = document.getElementById("adminLoginSection");
   const adminContent = document.getElementById("adminContent");
   const adminPinInput = document.getElementById("adminPinInput");
   const adminLoginBtn = document.getElementById("adminLoginBtn");
   const adminLogoutBtn = document.getElementById("adminLogoutBtn");
   const adminLoginMessage = document.getElementById("adminLoginMessage");
-
   const adminBookingsList = document.getElementById("adminBookingsList");
   const adminFeedbackList = document.getElementById("adminFeedbackList");
   const galleryTitle = document.getElementById("galleryTitle");
@@ -31,7 +27,6 @@
       adminBookingsList.innerHTML = '<div class="admin-item"><strong>No bookings yet.</strong></div>';
       return;
     }
-
     adminBookingsList.innerHTML = items.map(item => `
       <article class="admin-item">
         <strong>${item.customerName}</strong>
@@ -40,16 +35,13 @@
         <div>Total: £${item.total}</div>
         <small>${item.services.map(s => `${s.name} × ${s.quantity}`).join(", ")}</small>
         <small>Notes: ${item.notes || "None"}</small>
-        <div class="button-row">
-          <button class="btn btn-secondary delete-booking" data-id="${item.id}">Delete</button>
-        </div>
+        <div class="button-row"><button class="btn btn-secondary delete-booking" data-id="${item.id}">Delete</button></div>
       </article>
     `).join("");
 
     document.querySelectorAll(".delete-booking").forEach(btn => {
       btn.addEventListener("click", () => {
-        const remaining = VBStore.getBookings().filter(item => item.id !== btn.dataset.id);
-        VBStore.saveBookings(remaining);
+        VBStore.saveBookings(VBStore.getBookings().filter(item => item.id !== btn.dataset.id));
         renderBookings();
       });
     });
@@ -61,7 +53,6 @@
       adminFeedbackList.innerHTML = '<div class="admin-item"><strong>No feedback yet.</strong></div>';
       return;
     }
-
     adminFeedbackList.innerHTML = items.map(item => `
       <article class="admin-item">
         <strong>${item.name}</strong>
@@ -69,9 +60,7 @@
         <p>${item.text}</p>
         <small>${new Date(item.createdAt).toLocaleString()}</small>
         <div class="button-row">
-          <button class="btn btn-secondary toggle-feedback" data-id="${item.id}">
-            ${item.approved ? "Unapprove" : "Approve"}
-          </button>
+          <button class="btn btn-secondary toggle-feedback" data-id="${item.id}">${item.approved ? "Unapprove" : "Approve"}</button>
           <button class="btn btn-secondary delete-feedback" data-id="${item.id}">Delete</button>
         </div>
       </article>
@@ -79,18 +68,14 @@
 
     document.querySelectorAll(".toggle-feedback").forEach(btn => {
       btn.addEventListener("click", () => {
-        const items = VBStore.getFeedback().map(item =>
-          item.id === btn.dataset.id ? { ...item, approved: !item.approved } : item
-        );
+        const items = VBStore.getFeedback().map(item => item.id === btn.dataset.id ? { ...item, approved: !item.approved } : item);
         VBStore.saveFeedback(items);
         renderFeedback();
       });
     });
-
     document.querySelectorAll(".delete-feedback").forEach(btn => {
       btn.addEventListener("click", () => {
-        const items = VBStore.getFeedback().filter(item => item.id !== btn.dataset.id);
-        VBStore.saveFeedback(items);
+        VBStore.saveFeedback(VBStore.getFeedback().filter(item => item.id !== btn.dataset.id));
         renderFeedback();
       });
     });
@@ -102,7 +87,6 @@
       galleryGrid.innerHTML = '<div class="admin-item"><strong>No images uploaded yet.</strong></div>';
       return;
     }
-
     galleryGrid.innerHTML = items.map(item => `
       <div class="gallery-tile">
         <img src="${item.dataUrl}" alt="${item.title}">
@@ -115,8 +99,7 @@
 
     document.querySelectorAll(".delete-gallery").forEach(btn => {
       btn.addEventListener("click", () => {
-        const items = VBStore.getGallery().filter(item => item.id !== btn.dataset.id);
-        VBStore.saveGallery(items);
+        VBStore.saveGallery(VBStore.getGallery().filter(item => item.id !== btn.dataset.id));
         renderGallery();
       });
     });
@@ -125,7 +108,6 @@
   adminLoginBtn?.addEventListener("click", () => {
     adminLoginMessage.textContent = "";
     adminLoginMessage.className = "status-message";
-
     if (adminPinInput.value === adminPin) {
       VBStore.setAdminSession(true);
       adminPinInput.value = "";
@@ -147,24 +129,17 @@
   saveGalleryBtn?.addEventListener("click", () => {
     galleryMessage.textContent = "";
     galleryMessage.className = "status-message";
-
     const title = galleryTitle.value.trim();
     const file = galleryFile.files[0];
-
     if (!title || !file) {
       galleryMessage.textContent = "Please add a title and choose an image.";
       galleryMessage.classList.add("error");
       return;
     }
-
     const reader = new FileReader();
     reader.onload = () => {
       const items = VBStore.getGallery();
-      items.unshift({
-        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-        title,
-        dataUrl: reader.result
-      });
+      items.unshift({ id: String(Date.now()), title, dataUrl: reader.result });
       VBStore.saveGallery(items);
       galleryTitle.value = "";
       galleryFile.value = "";

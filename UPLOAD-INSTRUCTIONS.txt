@@ -1,0 +1,22 @@
+PREMIUM UI BUILD
+
+Upload these files:
+1. index.html
+2. css/styles.css
+
+If you want the safest method, upload the whole ZIP instead.
+
+After upload:
+1. Wait for Vercel redeploy
+2. Open the site
+3. Hard refresh the page
+4. Test:
+   - Home page styling
+   - Navigation links
+   - Book Now button
+   - Price section
+   - Mobile layout
+
+Important:
+- Keep your existing js/config.js with your real Supabase keys
+- Keep book.html and admin.html from your current working build

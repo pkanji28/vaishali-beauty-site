@@ -6,12 +6,6 @@ function formatCurrency(v) {
 function serviceById(id) {
   return (window.SERVICES || []).find(s => s.id === id);
 }
-function selectedServiceObjects(ids) {
-  return ids.map(serviceById).filter(Boolean);
-}
-function selectedTotal(ids) {
-  return selectedServiceObjects(ids).reduce((sum, s) => sum + Number(s.price || 0), 0);
-}
 function groupedServices() {
   const groups = {};
   (window.SERVICES || []).forEach(service => {
@@ -20,6 +14,24 @@ function groupedServices() {
     groups[category].push(service);
   });
   return groups;
+}
+function normaliseQuantities(quantities) {
+  const cleaned = {};
+  Object.entries(quantities || {}).forEach(([id, qty]) => {
+    const value = Number(qty || 0);
+    if (value > 0) cleaned[id] = value;
+  });
+  return cleaned;
+}
+function selectedServiceObjectsFromQuantities(quantities) {
+  return Object.entries(normaliseQuantities(quantities)).map(([id, qty]) => {
+    const service = serviceById(id);
+    if (!service) return null;
+    return { ...service, quantity: qty, lineTotal: Number(service.price || 0) * qty };
+  }).filter(Boolean);
+}
+function selectedTotalFromQuantities(quantities) {
+  return selectedServiceObjectsFromQuantities(quantities).reduce((sum, s) => sum + s.lineTotal, 0);
 }
 async function getSupabaseClient() {
   if (!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY || String(window.SUPABASE_URL).includes("PASTE_")) {

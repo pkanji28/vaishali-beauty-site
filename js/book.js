@@ -503,33 +503,34 @@
   }
 
   function buildWhatsAppMessage() {
-    const selected = getSelectedServices();
-    const serviceLines = selected.map((item) => {
-      const qtyText = item.quantity > 1 ? ` × ${item.quantity}` : "";
-      return `• ${item.name}${qtyText}`;
-    });
+  const selected = getSelectedServices();
 
-    const notesLine = state.notes.trim()
-      ? `📝 Notes: ${state.notes.trim()}`
-      : "";
+  const serviceLines = selected.map(item => {
+    const qtyText = item.quantity > 1 ? ` x ${item.quantity}` : "";
+    return `• ${item.name}${qtyText}`;
+  });
 
-    return [
-      `✨✨ Vaishali's Beauty Booking ✨✨`,
-      ``,
-      `👤 Name: ${state.name.trim()}`,
-      `📞 Phone: ${state.phone.trim()}`,
-      ``,
-      `🗓️ Date: ${formatDateForWhatsApp(state.date)}`,
-      `⏰ Time: ${state.time}`,
-      ``,
-      `💄 Services:`,
-      ...serviceLines,
-      ``,
-      `💷 Total: ${formatMoney(getTotal())}`,
-      ...(notesLine ? ["", notesLine] : []),
-      ``,
-      `Please confirm my appointment. Thank you 😊`
-    ].join("\n");
+  const notesLine = state.notes.trim()
+    ? `📝 Notes: ${state.notes.trim()}`
+    : "";
+
+  return [
+    `✨✨ Vaishali's Beauty Booking ✨✨`,
+    ``,
+    `👤 Name: ${state.name.trim()}`,
+    `📞 Phone: ${state.phone.trim()}`,
+    ``,
+    `🗓️ Date: ${formatDateForWhatsApp(state.date)}`,
+    `⏰ Time: ${state.time}`,
+    ``,
+    `💄 Services:`,
+    ...serviceLines,
+    ``,
+    `💷 Total: ${formatMoney(getTotal())}`,
+    ...(notesLine ? ["", notesLine] : []),
+    ``,
+    `Please confirm my appointment. Thank you 😊`
+  ].join("\n");
   }
 
   async function handleSaveBooking() {

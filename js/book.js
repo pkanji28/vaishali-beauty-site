@@ -2,243 +2,223 @@
   const services = window.VB_SERVICES || [];
   const timeSlots = window.VB_TIME_SLOTS || [];
   const whatsappNumber = (window.VB_CONFIG && window.VB_CONFIG.whatsappNumber) || "";
+
   const servicesList = document.getElementById("servicesList");
   const bookingTotal = document.getElementById("bookingTotal");
   const summaryTotal = document.getElementById("summaryTotal");
   const selectedServicesSummary = document.getElementById("selectedServicesSummary");
   const dateTimeSummary = document.getElementById("dateTimeSummary");
   const availabilitySummary = document.getElementById("availabilitySummary");
+
   const bookingDate = document.getElementById("bookingDate");
   const bookingTime = document.getElementById("bookingTime");
   const bookingForm = document.getElementById("bookingForm");
   const bookingMessage = document.getElementById("bookingMessage");
   const clearBookingBtn = document.getElementById("clearBookingBtn");
+
   const selectedQuantities = {};
 
   function setMinDate() {
     const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    bookingDate.min = `${yyyy}-${mm}-${dd}`;
+    bookingDate.min = today.toISOString().split("T")[0];
   }
 
   function groupServices() {
     return services.reduce((acc, service) => {
-      const category = service.category || "Services";
-      if (!acc[category]) acc[category] = [];
-      acc[category].push(service);
+      if (!acc[service.category]) acc[service.category] = [];
+      acc[service.category].push(service);
       return acc;
     }, {});
   }
 
   function renderServices() {
     const grouped = groupServices();
+
     servicesList.innerHTML = Object.entries(grouped).map(([category, items]) => `
       <section class="service-category">
-        <h4 class="service-category-title">${category}</h4>
-        <div class="service-picker">
-          ${items.map(service => `
-            <div class="service-option">
-              <div class="service-option-main">
-                <div class="service-option-icon">✦</div>
-                <div class="service-option-row">
-                  <div class="service-option-content">
-                    <strong>${service.name}</strong>
-                    <div class="small">£${service.price} each</div>
-                  </div>
-                  <div class="quantity-box">
-                    <button type="button" class="qty-btn qty-minus" data-id="${service.id}">−</button>
-                    <div class="qty-display" id="qty-${service.id}">${selectedQuantities[service.id] || 0}</div>
-                    <button type="button" class="qty-btn qty-plus" data-id="${service.id}">+</button>
-                  </div>
-                </div>
-              </div>
+        <h4>${category}</h4>
+        ${items.map(service => `
+          <div class="service-option">
+            <div>
+              <strong>${service.name}</strong>
+              <div>£${service.price}</div>
             </div>
-          `).join("")}
-        </div>
+            <div>
+              <button class="qty-minus" data-id="${service.id}">−</button>
+              <span id="qty-${service.id}">0</span>
+              <button class="qty-plus" data-id="${service.id}">+</button>
+            </div>
+          </div>
+        `).join("")}
       </section>
     `).join("");
-    bindQuantityButtons();
+
+    bindQtyButtons();
   }
 
-  function bindQuantityButtons() {
-    document.querySelectorAll(".qty-plus").forEach(button => {
-      button.addEventListener("click", () => {
-        const id = button.dataset.id;
-        selectedQuantities[id] = (selectedQuantities[id] || 0) + 1;
-        updateBookingUI();
-      });
+  function bindQtyButtons() {
+    document.querySelectorAll(".qty-plus").forEach(btn => {
+      btn.onclick = () => {
+        selectedQuantities[btn.dataset.id] = (selectedQuantities[btn.dataset.id] || 0) + 1;
+        updateUI();
+      };
     });
-    document.querySelectorAll(".qty-minus").forEach(button => {
-      button.addEventListener("click", () => {
-        const id = button.dataset.id;
-        selectedQuantities[id] = Math.max(0, (selectedQuantities[id] || 0) - 1);
-        updateBookingUI();
-      });
+
+    document.querySelectorAll(".qty-minus").forEach(btn => {
+      btn.onclick = () => {
+        selectedQuantities[btn.dataset.id] = Math.max(0, (selectedQuantities[btn.dataset.id] || 0) - 1);
+        updateUI();
+      };
     });
   }
 
-  function getSelectedItems() {
-    return services.map(service => ({ ...service, quantity: selectedQuantities[service.id] || 0 })).filter(item => item.quantity > 0);
+  function getSelected() {
+    return services.map(s => ({
+      ...s,
+      quantity: selectedQuantities[s.id] || 0,
+      lineTotal: (selectedQuantities[s.id] || 0) * s.price
+    })).filter(s => s.quantity > 0);
   }
 
   function getTotal() {
-    return getSelectedItems().reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return getSelected().reduce((sum, s) => sum + s.lineTotal, 0);
   }
 
-  function updateSummary() {
-    const items = getSelectedItems();
+  function formatDate(dateStr) {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+  }
+
+  function updateUI() {
+    const items = getSelected();
     const total = getTotal();
+
     bookingTotal.textContent = `£${total}`;
     summaryTotal.textContent = `£${total}`;
 
-    if (!items.length) {
-      selectedServicesSummary.innerHTML = '<div class="muted">No services selected yet.</div>';
-    } else {
-      selectedServicesSummary.innerHTML = items.map(item => `
-        <div class="summary-row">
-          <span>${item.name} × ${item.quantity}</span>
-          <strong>£${item.price * item.quantity}</strong>
-        </div>
-      `).join("");
-    }
+    selectedServicesSummary.innerHTML = items.length
+      ? items.map(i => `<div>${i.name} x ${i.quantity} — £${i.lineTotal}</div>`).join("")
+      : "No services selected";
 
-    const date = bookingDate.value;
-    const time = bookingTime.value;
-    dateTimeSummary.textContent = !date ? "Choose a date first, then a time." : (!time ? `${date} — choose a time` : `${date} at ${time}`);
-  }
+    dateTimeSummary.textContent = bookingDate.value
+      ? (bookingTime.value ? `${bookingDate.value} at ${bookingTime.value}` : `${bookingDate.value} — choose time`)
+      : "Choose a date first";
 
-  function updateServiceDisplays() {
-    services.forEach(service => {
-      const el = document.getElementById(`qty-${service.id}`);
-      if (el) el.textContent = selectedQuantities[service.id] || 0;
+    services.forEach(s => {
+      const el = document.getElementById(`qty-${s.id}`);
+      if (el) el.textContent = selectedQuantities[s.id] || 0;
     });
   }
 
-  function getBookingsForDate(date) {
-    return VBStore.getBookings().filter(item => item.date === date);
-  }
-
-  function loadTimesForDate() {
+  function loadTimes() {
     const date = bookingDate.value;
-    bookingTime.innerHTML = '<option value="">Select a time</option>';
-    if (!date) {
-      availabilitySummary.textContent = "Select a date to load available times.";
-      updateSummary();
-      return;
-    }
-    const taken = new Set(getBookingsForDate(date).map(item => item.time));
-    const available = timeSlots.filter(slot => !taken.has(slot));
-    available.forEach(slot => {
-      const option = document.createElement("option");
-      option.value = slot;
-      option.textContent = slot;
-      bookingTime.appendChild(option);
+    bookingTime.innerHTML = '<option value="">Select time</option>';
+
+    if (!date) return;
+
+    const taken = new Set(
+      VBStore.getBookings()
+        .filter(b => b.date === date)
+        .map(b => b.time)
+    );
+
+    const available = timeSlots.filter(t => !taken.has(t));
+
+    available.forEach(t => {
+      const opt = document.createElement("option");
+      opt.value = t;
+      opt.textContent = t;
+      bookingTime.appendChild(opt);
     });
-    availabilitySummary.textContent = available.length ? "Available times loaded successfully." : "No times available for this date.";
-    updateSummary();
+
+    availabilitySummary.textContent = available.length
+      ? "Available times loaded successfully."
+      : "No times available.";
   }
 
-  function updateBookingUI() {
-    updateServiceDisplays();
-    updateSummary();
-  }
-
-  function clearForm() {
-    services.forEach(service => selectedQuantities[service.id] = 0);
-    bookingForm.reset();
-    bookingTime.innerHTML = '<option value="">Select a time</option>';
-    bookingMessage.textContent = "";
-    bookingMessage.className = "status-message";
-    availabilitySummary.textContent = "Select a date to load available times.";
-    updateBookingUI();
-  }
-
-  function formatDisplayDate(dateStr) {
-    const date = new Date(dateStr + "T00:00:00");
-    return date.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-  }
-
-  function buildWhatsAppMessage(payload) {
-    const serviceLines = payload.services.map(item => {
-      const qtyText = item.quantity > 1 ? ` × ${item.quantity}` : "";
-      return `• ${item.name}${qtyText}`;
+  // ✅ FINAL CLEAN WHATSAPP MESSAGE
+  function buildWhatsAppMessage(data) {
+    const serviceLines = data.services.map(s => {
+      const qty = s.quantity > 1 ? ` x ${s.quantity}` : "";
+      return `• ${s.name}${qty}`;
     }).join("\n");
 
-    return [
-      "✨✨ Vaishali's Beauty Booking ✨✨",
-      "",
-      `👤 Name: ${payload.customerName}`,
-      `📞 Phone: ${payload.customerPhone}`,
-      `🗓️ Date: ${formatDisplayDate(payload.date)}`,
-      `⏰ Time: ${payload.time}`,
-      "💄 Services:",
-      serviceLines,
-      `💷 Total: £${payload.total}`,
-      `📝 Notes: ${payload.notes || "None"}`,
-      "",
-      "Please confirm my appointment. Thank you 😊",
-      "😊"
-    ].join("\n");
+    const notesSection = data.notes && data.notes.trim()
+      ? `📝 Notes: ${data.notes.trim()}\n\n`
+      : "";
+
+    return `✨✨ Vaishali's Beauty Booking ✨✨
+
+👤 Name: ${data.name}
+📞 Phone: ${data.phone}
+
+🗓️ Date: ${data.dateFormatted}
+⏰ Time: ${data.time}
+
+💄 Services:
+${serviceLines}
+
+💷 Total: £${data.total}
+
+${notesSection}Please confirm my appointment. Thank you! 😊`;
   }
 
-  bookingDate.addEventListener("change", loadTimesForDate);
-  bookingTime.addEventListener("change", updateSummary);
-  clearBookingBtn.addEventListener("click", clearForm);
+  bookingForm.addEventListener("submit", e => {
+    e.preventDefault();
 
-  bookingForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    bookingMessage.textContent = "";
-    bookingMessage.className = "status-message";
+    const selected = getSelected();
+    if (!selected.length) return;
 
-    const selected = getSelectedItems();
-    const total = getTotal();
-    const customerName = document.getElementById("customerName").value.trim();
-    const customerPhone = document.getElementById("customerPhone").value.trim();
+    const name = document.getElementById("customerName").value;
+    const phone = document.getElementById("customerPhone").value;
     const date = bookingDate.value;
     const time = bookingTime.value;
-    const notes = document.getElementById("bookingNotes").value.trim();
+    const notes = document.getElementById("bookingNotes").value;
 
-    if (!selected.length || !customerName || !customerPhone || !date || !time) {
-      bookingMessage.textContent = "Please choose services and complete name, phone, date and time.";
-      bookingMessage.classList.add("error");
-      return;
-    }
+    const total = getTotal();
 
-    const bookings = VBStore.getBookings();
-    const collides = bookings.some(item => item.date === date && item.time === time);
-    if (collides) {
-      bookingMessage.textContent = "That time has already been booked. Please choose another slot.";
-      bookingMessage.classList.add("error");
-      loadTimesForDate();
-      return;
-    }
-
-    const payload = {
-      id: String(Date.now()),
-      customerName,
-      customerPhone,
+    const booking = {
+      id: Date.now(),
+      name,
+      phone,
       date,
       time,
       notes,
       total,
-      services: selected,
-      createdAt: new Date().toISOString(),
-      status: "pending"
+      services: selected
     };
 
-    bookings.push(payload);
-    VBStore.saveBookings(bookings);
-    bookingMessage.textContent = "Booking saved. Opening WhatsApp now.";
-    bookingMessage.classList.add("success");
-    loadTimesForDate();
+    const bookings = VBStore.getBookings();
 
-    const wa = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(buildWhatsAppMessage(payload))}`;
-    window.open(wa, "_blank");
+    if (bookings.some(b => b.date === date && b.time === time)) {
+      bookingMessage.textContent = "Time already booked.";
+      return;
+    }
+
+    bookings.push(booking);
+    VBStore.saveBookings(bookings);
+
+    bookingMessage.textContent = "Booking saved. Opening WhatsApp...";
+
+    const message = buildWhatsAppMessage({
+      ...booking,
+      dateFormatted: formatDate(date)
+    });
+
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
   });
+
+  bookingDate.addEventListener("change", loadTimes);
+  bookingTime.addEventListener("change", updateUI);
+  clearBookingBtn.addEventListener("click", () => location.reload());
 
   setMinDate();
   renderServices();
-  updateBookingUI();
+  updateUI();
 })();

@@ -1,15 +1,19 @@
-FULL PRODUCTION ZIP UPDATED
+FIXED PRODUCTION ZIP
 
-Changes included:
-- Hollywood Waxing renamed to Hollywood Waxing (Strip) — £18
-- Hollywood Waxing (Hot Wax) — £25 added
-- updated homepage price list
-- updated booking service list
-- kept consistent booking/admin layout
-- booking flow and WhatsApp formatting preserved
+This fixes the booking page script so services render correctly again.
+Cause of issue:
+- the previous build had a JavaScript syntax error in book.html
+- because of that, the page script stopped running before services could render
 
-Important:
-- re-add your real Supabase values into js/config.js after upload
-- upload all files to GitHub
-- wait for Vercel redeploy
-- hard refresh your site
+Included:
+- fixed book.html
+- Hollywood Waxing (Strip) — £18
+- Hollywood Waxing (Hot Wax) — £25
+- homepage + booking + admin files
+- same overall structure as the production build
+
+After upload:
+1. replace all files
+2. put your real Supabase values back into js/config.js
+3. wait for Vercel redeploy
+4. hard refresh the booking page

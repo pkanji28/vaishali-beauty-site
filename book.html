@@ -1,498 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Book | Vaishali's Beauty</title>
-  <link rel="icon" href="assets/favicon.png"/>
-  <link rel="stylesheet" href="css/styles.css"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="index.html">
-        <img src="assets/logo-transparent.png" alt="Vaishali's Beauty"/>
+        <div class="brand-mark">VB</div>
         <div>
-          <div class="brand-title">Vaishali's Beauty</div>
-          <div class="brand-sub">Beauty • Care • Confidence</div>
+          <h1>Vaishali's Beauty</h1>
+          <p>Beauty • Care • Confidence</p>
         </div>
       </a>
+
       <nav class="nav">
         <a href="index.html">Home</a>
-        <a href="#booking-form">Booking</a>
-        <a href="#feedback-form">Feedback</a>
+        <a href="book.html" class="active">Booking</a>
+        <a href="feedback.html">Feedback</a>
         <a href="admin.html">Admin</a>
       </nav>
-      <a class="btn btn-secondary" href="index.html">Back to Home</a>
+
+      <a class="btn btn-secondary hide-mobile" href="index.html">Back to Home</a>
     </div>
   </header>
 
   <main class="section">
     <div class="container">
-      <div class="section-head">
-        <div class="kicker">Quantity Booking Build</div>
-        <h2>Choose services, set quantities, see your total, then book</h2>
-        <p>Each service now has + and − controls. Quantity goes to zero to remove the item automatically.</p>
+      <div class="section-heading">
+        <span class="eyebrow">Booking Page</span>
+        <h2>Choose services, see the total, then book</h2>
+        <p>Consistent layout on mobile and desktop. Add quantities, keep notes, select a date first, then choose a time.</p>
       </div>
 
-      <div class="booking-shell">
-        <section class="panel" id="booking-form">
+      <div class="booking-layout">
+        <section class="panel">
           <h3>Make a booking</h3>
-          <p class="small">Tap + to add services and − to reduce or remove them. Total updates instantly.</p>
+          <p class="muted">Tap + to add services and − to reduce or remove them. Total updates instantly.</p>
 
           <div id="servicesList"></div>
 
-          <div class="total-box" style="margin-top:16px">
-            <strong>Total:</strong> <span id="bookingTotal">£0</span>
+          <div class="total-card">
+            <span>Total</span>
+            <strong id="bookingTotal">£0</strong>
           </div>
 
-          <div class="form-grid" style="margin-top:16px">
-            <div>
-              <label for="customerName">Your name</label>
-              <input id="customerName" placeholder="Full name"/>
+          <form id="bookingForm" class="booking-form" novalidate>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="customerName">Your name</label>
+                <input id="customerName" name="customerName" type="text" placeholder="Full name" required />
+              </div>
+
+              <div class="form-group">
+                <label for="customerPhone">Phone number</label>
+                <input id="customerPhone" name="customerPhone" type="tel" placeholder="07..." required />
+              </div>
             </div>
-            <div>
-              <label for="customerPhone">Phone number</label>
-              <input id="customerPhone" placeholder="07..."/>
-            </div>
-            <div>
-              <label for="bookingDate">Date</label>
-              <input id="bookingDate" type="date"/>
-            </div>
-            <div>
-              <label for="bookingTime">Time</label>
-              <select id="bookingTime">
-                <option value="">Select a date first</option>
-              </select>
-            </div>
-          </div>
-
-          <div style="margin-top:16px">
-            <label for="bookingNotes">Notes</label>
-            <textarea id="bookingNotes" placeholder="Optional notes"></textarea>
-          </div>
-
-          <div class="notice" style="margin-top:16px">
-            <strong>How it works</strong>
-            <div class="small" style="margin-top:6px">
-              Add quantities, choose date and time, then save the booking. If the slot is free,
-              the booking is stored and WhatsApp opens with the same details including quantities.
-            </div>
-          </div>
-
-          <div id="bookingError" class="error hidden" style="margin-top:14px"></div>
-          <div id="bookingSuccess" class="success hidden" style="margin-top:14px"></div>
-
-          <div class="actions" style="margin-top:16px">
-            <button class="btn btn-primary" id="submitBookingBtn">Save booking + open WhatsApp</button>
-            <a class="btn btn-secondary" href="index.html">Cancel</a>
-          </div>
-        </section>
-
-        <aside class="sticky">
-          <div class="panel">
-            <h3>Live summary</h3>
-
-            <div class="info-box">
-              <strong>Selected services</strong>
-              <div id="selectedServicesText" class="small" style="margin-top:6px">No services selected yet.</div>
-            </div>
-
-            <div class="info-box" style="margin-top:12px">
-              <strong>Date and time</strong>
-              <div id="selectedDateTimeText" class="small" style="margin-top:6px">Choose a date and then a time.</div>
-            </div>
-
-            <div class="info-box" style="margin-top:12px">
-              <strong>Availability check</strong>
-              <div id="collisionText" class="small" style="margin-top:6px">Pick a date to load available times.</div>
-            </div>
-
-            <div class="info-box" style="margin-top:12px">
-              <strong>Total</strong>
-              <div id="stickyTotal" class="small" style="margin-top:6px">£0</div>
-            </div>
-          </div>
-        </aside>
-      </div>
-
-      <section class="section" id="feedback-form" style="padding-bottom:0">
-        <div class="booking-shell">
-          <div class="panel">
-            <h3>Leave feedback</h3>
-            <p class="small">Customers can send feedback after their treatment.</p>
 
             <div class="form-grid">
-              <div>
-                <label for="feedbackName">Your name</label>
-                <input id="feedbackName" placeholder="Your name"/>
+              <div class="form-group">
+                <label for="bookingDate">Date</label>
+                <input id="bookingDate" name="bookingDate" type="date" required />
               </div>
-              <div>
-                <label for="feedbackRating">Rating</label>
-                <select id="feedbackRating">
-                  <option value="5">5 stars</option>
-                  <option value="4">4 stars</option>
-                  <option value="3">3 stars</option>
-                  <option value="2">2 stars</option>
-                  <option value="1">1 star</option>
+
+              <div class="form-group">
+                <label for="bookingTime">Time</label>
+                <select id="bookingTime" name="bookingTime" required>
+                  <option value="">Select a time</option>
                 </select>
               </div>
             </div>
 
-            <div style="margin-top:16px">
-              <label for="feedbackText">Feedback</label>
-              <textarea id="feedbackText" placeholder="Tell us about your experience"></textarea>
+            <div class="form-group">
+              <label for="bookingNotes">Notes</label>
+              <textarea id="bookingNotes" name="bookingNotes" rows="4" placeholder="Optional notes"></textarea>
             </div>
 
-            <div id="feedbackMsg" class="small" style="margin-top:12px"></div>
-            <button class="btn btn-primary" id="submitFeedbackBtn" style="margin-top:16px">Send feedback</button>
+            <div class="helper-card">
+              <h4>How it works</h4>
+              <p>
+                Choose services, then select a date. Available times load automatically.
+                If the slot is free, the booking is stored and WhatsApp opens with the same details.
+              </p>
+            </div>
+
+            <p id="bookingMessage" class="status-message"></p>
+
+            <div class="button-row">
+              <button type="submit" class="btn btn-primary">Save booking + open WhatsApp</button>
+              <button type="button" class="btn btn-secondary" id="clearBookingBtn">Clear</button>
+            </div>
+          </form>
+        </section>
+
+        <aside class="panel side-panel">
+          <h3>Live summary</h3>
+
+          <div class="summary-card">
+            <h4>Selected services</h4>
+            <div id="selectedServicesSummary" class="summary-list muted">No services selected yet.</div>
           </div>
 
-          <div class="panel">
-            <h3>Approved feedback</h3>
-            <div id="approvedFeedbackList" class="gallery-grid"></div>
+          <div class="summary-card">
+            <h4>Date and time</h4>
+            <div id="dateTimeSummary" class="muted">Choose a date first, then a time.</div>
           </div>
-        </div>
-      </section>
+
+          <div class="summary-card">
+            <h4>Availability check</h4>
+            <div id="availabilitySummary" class="muted">Select a date to load available times.</div>
+          </div>
+
+          <div class="summary-card">
+            <h4>Total</h4>
+            <div id="summaryTotal" class="summary-total">£0</div>
+          </div>
+        </aside>
+      </div>
     </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
-  <script src="js/app.js"></script>
-  <script>
-    const TIME_SLOTS = ["9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM","5:30 PM","6:00 PM","6:30 PM"];
-    const quantities = {};
-    const servicesList = document.getElementById("servicesList");
-    const bookingTotal = document.getElementById("bookingTotal");
-    const stickyTotal = document.getElementById("stickyTotal");
-    const selectedServicesText = document.getElementById("selectedServicesText");
-    const selectedDateTimeText = document.getElementById("selectedDateTimeText");
-    const collisionText = document.getElementById("collisionText");
-    const bookingTime = document.getElementById("bookingTime");
-    const bookingDate = document.getElementById("bookingDate");
-    const bookingError = document.getElementById("bookingError");
-    const bookingSuccess = document.getElementById("bookingSuccess");
-
-    function formatDateReadable(dateStr) {
-      const date = new Date(dateStr + "T00:00:00");
-      return date.toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
-    }
-
-    function getSelectedItems() {
-      return selectedServiceObjectsFromQuantities(quantities);
-    }
-
-    function setQuantity(serviceId, nextQty) {
-      if (nextQty <= 0) delete quantities[serviceId];
-      else quantities[serviceId] = nextQty;
-      renderQuantities();
-      updateSummary();
-    }
-
-    function renderServices() {
-  const groups = groupedServices();
-
-  servicesList.innerHTML = Object.entries(groups).map(([category, items]) => `
-    <section class="service-category">
-      <h4 class="service-category-title">${category}</h4>
-
-      <div class="service-picker">
-        ${items.map(service => `
-          <div class="service-option" data-id="${service.id}">
-            
-            <div class="service-option-main">
-              
-              <div class="service-option-icon">✦</div>
-
-              <div class="service-option-row">
-
-                <div class="service-option-content">
-                  <strong>${service.name}</strong>
-                  <div class="small">£${service.price} each</div>
-                </div>
-
-                <div class="quantity-box">
-                  <button type="button" class="qty-btn qty-minus" data-id="${service.id}">−</button>
-                  <div class="qty-display" id="qty-${service.id}">0</div>
-                  <button type="button" class="qty-btn qty-plus" data-id="${service.id}">+</button>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-        `).join("")}
-      </div>
-    </section>
-  `).join("");
-    }
-
-      document.querySelectorAll(".qty-plus").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-id");
-          setQuantity(id, Number(quantities[id] || 0) + 1);
-        });
-      });
-
-      document.querySelectorAll(".qty-minus").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-id");
-          setQuantity(id, Number(quantities[id] || 0) - 1);
-        });
-      });
-
-      renderQuantities();
-    }
-
-    function renderQuantities() {
-      document.querySelectorAll(".service-option").forEach(option => {
-        const id = option.getAttribute("data-id");
-        const qty = Number(quantities[id] || 0);
-        const target = document.getElementById(`qty-${id}`);
-        if (target) target.textContent = qty;
-        option.classList.toggle("selected", qty > 0);
-      });
-    }
-
-    function updateSummary() {
-      const services = getSelectedItems();
-      const total = selectedTotalFromQuantities(quantities);
-      bookingTotal.textContent = formatCurrency(total);
-      stickyTotal.textContent = formatCurrency(total);
-
-      if (services.length) {
-        selectedServicesText.innerHTML = `
-          <ul class="summary-list">
-            ${services.map(service => `
-              <li>
-                <span>${service.name} <span class="inline-muted">× ${service.quantity}</span></span>
-                <strong>£${service.lineTotal}</strong>
-              </li>
-            `).join("")}
-          </ul>
-        `;
-      } else {
-        selectedServicesText.textContent = "No services selected yet.";
-      }
-
-      selectedDateTimeText.textContent = bookingDate.value && bookingTime.value
-        ? `${formatDateReadable(bookingDate.value)} at ${bookingTime.value}`
-        : "Choose a date and then a time.";
-    }
-
-    async function loadAvailableTimes() {
-      if (!bookingDate.value) {
-        bookingTime.innerHTML = '<option value="">Select a date first</option>';
-        collisionText.textContent = "Pick a date to load available times.";
-        updateSummary();
-        return;
-      }
-
-      bookingTime.innerHTML = '<option value="">Loading times...</option>';
-      collisionText.textContent = "Checking existing bookings...";
-
-      try {
-        const sb = await getSupabaseClient();
-        const { data, error } = await sb.from("bookings")
-          .select("booking_time,status")
-          .eq("booking_date", bookingDate.value)
-          .in("status", ["pending","confirmed"]);
-
-        if (error) throw error;
-
-        const booked = new Set((data || []).map(item => item.booking_time));
-        const available = TIME_SLOTS.filter(t => !booked.has(t));
-
-        bookingTime.innerHTML = '<option value="">Select a time</option>';
-        available.forEach(t => {
-          const opt = document.createElement("option");
-          opt.value = t;
-          opt.textContent = t;
-          bookingTime.appendChild(opt);
-        });
-
-        collisionText.textContent = available.length
-          ? "Available times loaded successfully."
-          : "No available times left for this date.";
-      } catch (e) {
-        bookingTime.innerHTML = '<option value="">Could not load times</option>';
-        collisionText.textContent = "Could not load availability yet.";
-      }
-
-      updateSummary();
-    }
-
-    function openWhatsAppBooking(payload) {
-      const lines = [
-        "✨ *Vaishali’s Beauty Booking* ✨",
-        "",
-        "👤 Name: " + payload.name,
-        "📞 Phone: " + payload.phone,
-        "",
-        "📅 Date: " + formatDateReadable(payload.date),
-        "⏰ Time: " + payload.time,
-        "",
-        "💄 Services:"
-      ];
-
-      payload.services.forEach(service => {
-        lines.push(`• ${service.name} × ${service.quantity} — £${service.lineTotal}`);
-      });
-
-      lines.push("");
-      lines.push("💷 Total: £" + payload.total);
-      if (payload.notes) lines.push("📝 Notes: " + payload.notes);
-      lines.push("");
-      lines.push("Please confirm my appointment. Thank you 😊");
-
-      window.open("https://wa.me/447599693034?text=" + encodeURIComponent(lines.join("\n")), "_blank");
-    }
-
-    async function submitBooking() {
-      bookingError.classList.add("hidden");
-      bookingSuccess.classList.add("hidden");
-
-      const services = getSelectedItems();
-      const total = selectedTotalFromQuantities(quantities);
-      const name = document.getElementById("customerName").value.trim();
-      const phone = document.getElementById("customerPhone").value.trim();
-      const booking_date = bookingDate.value;
-      const booking_time = bookingTime.value;
-      const notes = document.getElementById("bookingNotes").value.trim();
-
-      if (!services.length || !name || !phone || !booking_date || !booking_time) {
-        bookingError.textContent = "Please add at least one service and complete name, phone, date and time.";
-        bookingError.classList.remove("hidden");
-        return;
-      }
-
-      try {
-        const sb = await getSupabaseClient();
-
-        const { data: existing, error: checkError } = await sb.from("bookings")
-          .select("id")
-          .eq("booking_date", booking_date)
-          .eq("booking_time", booking_time)
-          .in("status", ["pending","confirmed"])
-          .limit(1);
-
-        if (checkError) throw checkError;
-
-        if (existing && existing.length) {
-          bookingError.textContent = "That slot is already taken. Please choose another time.";
-          bookingError.classList.remove("hidden");
-          await loadAvailableTimes();
-          return;
-        }
-
-        const serviceSummary = services.map(service => `${service.name} x${service.quantity}`).join(", ");
-
-        const payload = {
-          customer_name: name,
-          customer_phone: phone,
-          service: serviceSummary,
-          total: total,
-          booking_date: booking_date,
-          booking_time: booking_time,
-          status: "pending",
-          notes: notes
-        };
-
-        const { error } = await sb.from("bookings").insert(payload);
-        if (error) throw error;
-
-        bookingSuccess.textContent = "Booking saved. Opening WhatsApp now.";
-        bookingSuccess.classList.remove("hidden");
-
-        openWhatsAppBooking({
-          name,
-          phone,
-          date: booking_date,
-          time: booking_time,
-          services,
-          total,
-          notes
-        });
-
-        await loadAvailableTimes();
-      } catch (e) {
-        bookingError.textContent = e.message || "Booking failed. Please try again.";
-        bookingError.classList.remove("hidden");
-      }
-    }
-
-    async function submitFeedback() {
-      const name = document.getElementById("feedbackName").value.trim();
-      const rating = Number(document.getElementById("feedbackRating").value);
-      const text = document.getElementById("feedbackText").value.trim();
-      const box = document.getElementById("feedbackMsg");
-      box.textContent = "";
-
-      if (!name || !text) {
-        box.textContent = "Please add your name and feedback.";
-        return;
-      }
-
-      try {
-        const sb = await getSupabaseClient();
-        const { error } = await sb.from("feedback").insert({
-          customer_name: name,
-          rating,
-          message: text,
-          approved: false
-        });
-        if (error) throw error;
-
-        box.textContent = "Thank you. Your feedback has been sent for review.";
-        document.getElementById("feedbackName").value = "";
-        document.getElementById("feedbackText").value = "";
-      } catch (e) {
-        box.textContent = e.message || "Could not send feedback yet.";
-      }
-    }
-
-    async function loadApprovedFeedback() {
-      const list = document.getElementById("approvedFeedbackList");
-      list.innerHTML = "";
-
-      try {
-        const sb = await getSupabaseClient();
-        const { data, error } = await sb.from("feedback")
-          .select("customer_name,rating,message")
-          .eq("approved", true)
-          .order("created_at", { ascending:false })
-          .limit(6);
-
-        if (error) throw error;
-
-        if (!data || !data.length) {
-          list.innerHTML = '<div class="panel"><p class="small">No feedback approved yet.</p></div>';
-          return;
-        }
-
-        list.innerHTML = data.map(item => `
-          <article class="panel">
-            <p>“${item.message}”</p>
-            <strong>${item.customer_name} · ${"★".repeat(item.rating || 5)}</strong>
-          </article>
-        `).join("");
-      } catch (e) {
-        list.innerHTML = '<div class="panel"><p class="small">Approved feedback will appear here after setup.</p></div>';
-      }
-    }
-
-    renderServices();
-    bookingDate.addEventListener("change", loadAvailableTimes);
-    bookingTime.addEventListener("change", updateSummary);
-    document.getElementById("submitBookingBtn").addEventListener("click", submitBooking);
-    document.getElementById("submitFeedbackBtn").addEventListener("click", submitFeedback);
-    loadApprovedFeedback();
-    updateSummary();
-  </script>
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/book.js"></script>
 </body>
 </html>

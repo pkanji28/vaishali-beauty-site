@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feedback | Vaishali's Beauty</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <div class="brand-mark">VB</div>
+        <div>
+          <h1>Vaishali's Beauty</h1>
+          <p>Beauty • Care • Confidence</p>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="book.html">Booking</a>
+        <a href="feedback.html" class="active">Feedback</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container feedback-layout">
+      <section class="panel">
+        <div class="section-heading align-left">
+          <span class="eyebrow">Leave Feedback</span>
+          <h2>Share your experience</h2>
+          <p>Feedback is stored first, then can be approved from the admin page before it shows publicly.</p>
+        </div>
+
+        <form id="feedbackForm" class="booking-form" novalidate>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="feedbackName">Your name</label>
+              <input id="feedbackName" type="text" placeholder="Your name" required />
+            </div>
+            <div class="form-group">
+              <label for="feedbackRating">Rating</label>
+              <select id="feedbackRating" required>
+                <option value="">Select rating</option>
+                <option value="5">5 - Excellent</option>
+                <option value="4">4 - Very Good</option>
+                <option value="3">3 - Good</option>
+                <option value="2">2 - Fair</option>
+                <option value="1">1 - Poor</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="feedbackText">Feedback</label>
+            <textarea id="feedbackText" rows="5" placeholder="Write your feedback here..." required></textarea>
+          </div>
+
+          <p id="feedbackMessage" class="status-message"></p>
+
+          <div class="button-row">
+            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="panel">
+        <h3>Approved feedback</h3>
+        <div id="approvedFeedbackList" class="stack-list"></div>
+      </aside>
+    </div>
+  </main>
+
+  <script src="js/storage.js"></script>
+  <script src="js/feedback.js"></script>
+</body>
+</html>

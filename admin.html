@@ -1,1 +1,91 @@
-<!doctype html><html><body>Placeholder</body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin | Vaishali's Beauty</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <div class="brand-mark">VB</div>
+        <div>
+          <h1>Vaishali's Beauty</h1>
+          <p>Beauty • Care • Confidence</p>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="book.html">Booking</a>
+        <a href="feedback.html">Feedback</a>
+        <a href="admin.html" class="active">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <section id="adminLoginSection" class="panel admin-login-panel">
+        <div class="section-heading align-left">
+          <span class="eyebrow">Private Admin</span>
+          <h2>Admin login</h2>
+          <p>Use the PIN from <code>js/config.js</code>. Default: <strong>1234</strong></p>
+        </div>
+
+        <div class="admin-login-row">
+          <input id="adminPinInput" type="password" placeholder="Enter admin PIN" />
+          <button id="adminLoginBtn" class="btn btn-primary">Login</button>
+          <button id="adminLogoutBtn" class="btn btn-secondary hidden">Logout</button>
+        </div>
+        <p id="adminLoginMessage" class="status-message"></p>
+      </section>
+
+      <section id="adminContent" class="hidden">
+        <div class="admin-grid">
+          <section class="panel">
+            <h3>Bookings</h3>
+            <div id="adminBookingsList" class="stack-list"></div>
+          </section>
+
+          <section class="panel">
+            <h3>Feedback moderation</h3>
+            <div id="adminFeedbackList" class="stack-list"></div>
+          </section>
+        </div>
+
+        <section class="panel">
+          <h3>Gallery upload</h3>
+          <p class="muted">Upload photos from this device. They are stored in local browser storage for this site.</p>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="galleryTitle">Image title</label>
+              <input id="galleryTitle" type="text" placeholder="Example: Bridal makeup" />
+            </div>
+
+            <div class="form-group">
+              <label for="galleryFile">Choose image</label>
+              <input id="galleryFile" type="file" accept="image/*" />
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button id="saveGalleryBtn" class="btn btn-primary">Save Image</button>
+          </div>
+
+          <p id="galleryMessage" class="status-message"></p>
+
+          <div id="galleryGrid" class="gallery-grid"></div>
+        </section>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -539,4 +539,45 @@ label{
   .trust-stats{
     grid-template-columns:1fr;
   }
+  .service-option-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  }
+
+  .service-option-row {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.service-option-content strong {
+  font-size: 0.95rem;
+}
+
+.small {
+  font-size: 0.8rem;
+}
+
+.quantity-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.qty-display {
+  min-width: 16px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
 }

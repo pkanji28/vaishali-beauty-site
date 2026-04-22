@@ -1,0 +1,1 @@
+/* Homepage JS reserved for future safe enhancements. */

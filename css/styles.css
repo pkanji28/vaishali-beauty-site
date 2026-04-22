@@ -796,3 +796,113 @@ textarea {
     font-size: 1.6rem;
   }
 }
+
+
+.price-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.price-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(216, 200, 167, 0.42);
+}
+
+.price-list li:last-child {
+  border-bottom: 0;
+}
+
+.price-list li span {
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+}
+
+.price-list li strong {
+  white-space: nowrap;
+}
+
+.summary-line span {
+  flex: 1;
+  min-width: 0;
+}
+
+.summary-line strong {
+  white-space: nowrap;
+}
+
+.service-item-main {
+  align-items: flex-start;
+}
+
+.service-item-copy {
+  flex: 1;
+}
+
+.field-group input[type="date"] {
+  min-height: 62px;
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    padding-top: 20px;
+  }
+
+  .panel-head {
+    margin-bottom: 18px;
+  }
+
+  .panel-head h3 {
+    font-size: 1.85rem;
+    line-height: 1.15;
+  }
+
+  .panel-head p {
+    margin: 8px 0 0;
+    font-size: 1rem;
+  }
+
+  .service-item-card {
+    padding: 18px;
+  }
+
+  .service-item-main {
+    gap: 14px;
+  }
+
+  .service-item-copy h5 {
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+
+  .service-item-copy p {
+    margin-bottom: 12px;
+  }
+
+  .quantity-inline {
+    gap: 12px;
+  }
+
+  .qty-value {
+    min-width: 24px;
+    font-size: 1.35rem;
+  }
+
+  .price-card h4 {
+    margin-bottom: 8px;
+  }
+
+  .price-list li {
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .price-list li span {
+    padding-right: 8px;
+  }
+}

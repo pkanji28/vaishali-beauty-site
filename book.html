@@ -1,23 +1,122 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Booking</title>
-<link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book | Vaishali's Beauty</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" href="index.html" aria-label="Vaishali's Beauty home">
+        <div class="brand-mark">VB</div>
+        <div class="brand-copy">
+          <h1>Vaishali's Beauty</h1>
+          <p>Beauty • Care • Confidence</p>
+        </div>
+      </a>
 
-<h2>Book Appointment</h2>
+      <div class="header-right">
+        <nav class="nav" aria-label="Main navigation">
+          <a href="index.html">Home</a>
+          <a class="active" href="book.html">Booking</a>
+          <a href="feedback.html">Feedback</a>
+          <a href="admin.html">Admin</a>
+        </nav>
+        <a class="btn btn-primary header-book-btn" href="book.html">Book Now</a>
+      </div>
+    </div>
+  </header>
 
-<input type="date">
+  <main class="section booking-page">
+    <div class="container booking-layout">
+      <section class="card booking-main">
+        <div class="section-heading">
+          <span class="eyebrow">Booking Page</span>
+          <h2>Choose services, then book</h2>
+          <p>Select one or more services. The total updates automatically.</p>
+        </div>
 
-<select id="time"></select>
+        <div id="servicesMount"></div>
 
-<input placeholder="Name">
-<input placeholder="Phone">
+        <div class="total-bar card-soft">
+          <span>Total:</span>
+          <strong id="bookingTotal">£0</strong>
+        </div>
 
-<button onclick="alert('Booked')">Confirm</button>
+        <form id="bookingForm" class="booking-form" novalidate>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="customerName">Your name</label>
+              <input id="customerName" type="text" placeholder="Full name" required>
+            </div>
+            <div class="form-field">
+              <label for="customerPhone">Phone number</label>
+              <input id="customerPhone" type="tel" placeholder="07..." required>
+            </div>
+          </div>
 
-<script src="js/book.js"></script>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="bookingDate">Date</label>
+              <input id="bookingDate" type="date" required>
+            </div>
+            <div class="form-field">
+              <label for="bookingTime">Time</label>
+              <select id="bookingTime" required>
+                <option value="">Select a time</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="bookingNotes">Notes</label>
+            <textarea id="bookingNotes" placeholder="Optional notes"></textarea>
+          </div>
+
+          <div class="form-note card-soft">
+            <h3>How it works</h3>
+            <p>Choose services, then select a date. Available times load automatically in 30-minute intervals from 8:00 AM to 9:00 PM. If the slot is free, the booking is saved and WhatsApp opens with the same details.</p>
+          </div>
+
+          <div id="bookingStatus" class="status-message" aria-live="polite"></div>
+
+          <div class="booking-actions">
+            <button class="btn btn-primary" type="submit">Save booking + open WhatsApp</button>
+            <button class="btn btn-secondary" type="button" id="clearBooking">Clear</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="card summary-panel">
+        <h2>Live summary</h2>
+
+        <div class="summary-card card-soft">
+          <h3>Selected services</h3>
+          <div id="summaryServices" class="summary-list empty">No services selected yet.</div>
+        </div>
+
+        <div class="summary-card card-soft">
+          <h3>Date and time</h3>
+          <div id="summaryDateTime">Choose a date and time.</div>
+        </div>
+
+        <div class="summary-card card-soft">
+          <h3>Availability check</h3>
+          <div id="summaryAvailability">Choose a date first to load times.</div>
+        </div>
+
+        <div class="summary-card card-soft">
+          <h3>Total</h3>
+          <div id="summaryTotal" class="summary-total">£0</div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/book.js"></script>
 </body>
 </html>

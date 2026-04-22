@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Feedback | Vaishali's Beauty</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <header class="site-header">
@@ -16,62 +16,52 @@
           <p>Beauty • Care • Confidence</p>
         </div>
       </a>
-
-      <nav class="nav">
-        <a href="index.html">Home</a>
-        <a href="book.html">Booking</a>
-        <a href="feedback.html" class="active">Feedback</a>
-        <a href="admin.html">Admin</a>
-      </nav>
-
-      <a class="btn btn-primary hide-mobile" href="book.html">Book Now</a>
+      <div class="header-right">
+        <nav class="nav">
+          <a href="index.html">Home</a>
+          <a href="book.html">Booking</a>
+          <a class="active" href="feedback.html">Feedback</a>
+          <a href="admin.html">Admin</a>
+        </nav>
+      </div>
     </div>
   </header>
-
-  <main class="page-shell">
-    <section class="section compact-top">
-      <div class="container narrow-page">
-        <div class="section-heading center narrow">
+  <main class="section">
+    <div class="container simple-page">
+      <section class="card simple-card">
+        <div class="section-heading">
           <span class="eyebrow">Customer Feedback</span>
-          <h2>Clients can leave feedback after their appointment</h2>
-          <p>Feedback goes to the system first, then can be approved before it shows publicly.</p>
+          <h2>Leave feedback after your appointment</h2>
+          <p>Feedback is stored locally in this safe fix build and can be reviewed from the admin page.</p>
         </div>
-
-        <section class="panel form-panel">
-          <h3>Leave feedback</h3>
-          <div class="field-grid two-up">
-            <label class="field-group">
-              <span>Your name</span>
-              <input id="feedbackName" type="text" placeholder="Your name" />
-            </label>
-            <label class="field-group">
-              <span>Rating</span>
-              <select id="feedbackRating">
-                <option value="5">5 stars</option>
-                <option value="4">4 stars</option>
-                <option value="3">3 stars</option>
-                <option value="2">2 stars</option>
-                <option value="1">1 star</option>
+        <form id="feedbackForm" class="booking-form">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="feedbackName">Your name</label>
+              <input id="feedbackName" type="text" placeholder="Your name" required>
+            </div>
+            <div class="form-field">
+              <label for="feedbackRating">Rating</label>
+              <select id="feedbackRating" required>
+                <option value="">Select</option>
+                <option>5</option>
+                <option>4</option>
+                <option>3</option>
+                <option>2</option>
+                <option>1</option>
               </select>
-            </label>
+            </div>
           </div>
-          <label class="field-group">
-            <span>Your feedback</span>
-            <textarea id="feedbackText" rows="5" placeholder="Tell us about your experience"></textarea>
-          </label>
-          <p id="feedbackStatus" class="status-message"></p>
-          <button id="submitFeedbackBtn" class="btn btn-primary btn-large" type="button">Submit feedback</button>
-        </section>
-
-        <section class="panel form-panel">
-          <h3>Approved feedback</h3>
-          <div id="approvedFeedbackList" class="review-list"></div>
-        </section>
-      </div>
-    </section>
+          <div class="form-field">
+            <label for="feedbackMessage">Feedback</label>
+            <textarea id="feedbackMessage" placeholder="Share your experience" required></textarea>
+          </div>
+          <div id="feedbackStatus" class="status-message"></div>
+          <button class="btn btn-primary" type="submit">Submit feedback</button>
+        </form>
+      </section>
+    </div>
   </main>
-
-  <script src="js/storage.js"></script>
   <script src="js/feedback.js"></script>
 </body>
 </html>

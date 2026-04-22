@@ -8,7 +8,7 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="container header-inner">
+    <div class="site-header-inner">
       <a class="brand" href="index.html">
         <div class="brand-mark">VB</div>
         <div class="brand-copy">
@@ -16,68 +16,60 @@
           <p>Beauty • Care • Confidence</p>
         </div>
       </a>
+
       <nav class="nav">
         <a href="index.html">Home</a>
         <a href="book.html">Booking</a>
         <a href="feedback.html">Feedback</a>
         <a href="admin.html" class="active">Admin</a>
       </nav>
+
+      <a class="btn btn-primary hide-mobile" href="book.html">Book Now</a>
     </div>
   </header>
 
-  <main class="section">
-    <div class="container">
-      <section id="adminLoginSection" class="panel admin-login-panel">
-        <div class="section-heading align-left">
+  <main class="page-shell">
+    <section class="section compact-top">
+      <div class="container narrow-page admin-page">
+        <div class="section-heading center narrow">
           <span class="eyebrow">Private Admin</span>
-          <h2>Admin login</h2>
-          <p>Use the PIN from <code>js/config.js</code>. Default: <strong>1234</strong></p>
+          <h2>Manage bookings and feedback</h2>
+          <p>Default PIN: <strong>1234</strong>. Change it later in code if you want.</p>
         </div>
 
-        <div class="admin-login-row">
-          <input id="adminPinInput" type="password" placeholder="Enter admin PIN" />
-          <button id="adminLoginBtn" class="btn btn-primary">Login</button>
-          <button id="adminLogoutBtn" class="btn btn-secondary hidden">Logout</button>
-        </div>
-        <p id="adminLoginMessage" class="status-message"></p>
-      </section>
-
-      <section id="adminContent" class="hidden">
-        <div class="admin-grid">
-          <section class="panel">
-            <h3>Bookings</h3>
-            <div id="adminBookingsList" class="stack-list"></div>
-          </section>
-          <section class="panel">
-            <h3>Feedback moderation</h3>
-            <div id="adminFeedbackList" class="stack-list"></div>
-          </section>
-        </div>
-
-        <section class="panel">
-          <h3>Gallery upload</h3>
-          <p class="muted">Upload photos from this device. They are stored in local browser storage for this site.</p>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="galleryTitle">Image title</label>
-              <input id="galleryTitle" type="text" placeholder="Example: Bridal makeup" />
-            </div>
-            <div class="form-group">
-              <label for="galleryFile">Choose image</label>
-              <input id="galleryFile" type="file" accept="image/*" />
-            </div>
-          </div>
-          <div class="button-row">
-            <button id="saveGalleryBtn" class="btn btn-primary">Save Image</button>
-          </div>
-          <p id="galleryMessage" class="status-message"></p>
-          <div id="galleryGrid" class="gallery-grid"></div>
+        <section id="adminLoginPanel" class="panel form-panel">
+          <h3>Admin login</h3>
+          <label class="field-group">
+            <span>Enter PIN</span>
+            <input id="adminPinInput" type="password" placeholder="PIN" />
+          </label>
+          <p id="adminLoginStatus" class="status-message"></p>
+          <button id="adminLoginBtn" class="btn btn-primary btn-large" type="button">Unlock admin</button>
         </section>
-      </section>
-    </div>
+
+        <div id="adminContent" class="admin-content hidden">
+          <section class="panel form-panel">
+            <div class="admin-head">
+              <h3>Saved bookings</h3>
+              <button id="adminLogoutBtn" class="btn btn-secondary" type="button">Logout</button>
+            </div>
+            <div id="bookingList" class="admin-list"></div>
+          </section>
+
+          <section class="panel form-panel">
+            <h3>Pending feedback</h3>
+            <div id="pendingFeedbackList" class="admin-list"></div>
+          </section>
+
+          <section class="panel form-panel">
+            <h3>Approved feedback</h3>
+            <div id="approvedFeedbackAdminList" class="admin-list"></div>
+          </section>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <script src="js/config.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/admin.js"></script>
 </body>

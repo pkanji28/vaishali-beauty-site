@@ -4,115 +4,125 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Book | Vaishali's Beauty</title>
+  <meta name="description" content="Choose services, set quantities and confirm your booking on WhatsApp." />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="index.html">
+    <div class="site-header-inner">
+      <a class="brand" href="index.html" aria-label="Vaishali's Beauty home">
         <div class="brand-mark">VB</div>
         <div class="brand-copy">
           <h1>Vaishali's Beauty</h1>
           <p>Beauty • Care • Confidence</p>
         </div>
       </a>
-      <nav class="nav">
+
+      <nav class="nav" aria-label="Main navigation">
         <a href="index.html">Home</a>
         <a href="book.html" class="active">Booking</a>
         <a href="feedback.html">Feedback</a>
         <a href="admin.html">Admin</a>
       </nav>
+
+      <a class="btn btn-primary hide-mobile" href="#booking-form">Book Now</a>
     </div>
   </header>
 
-  <main class="section">
-    <div class="container">
-      <div class="section-heading">
-        <span class="eyebrow">Booking Page</span>
-        <h2>Choose services, see the total, then book</h2>
-        <p>Consistent layout on mobile and desktop. Add quantities, keep notes, select a date first, then choose a time.</p>
+  <main class="page-shell">
+    <section class="section compact-top">
+      <div class="container">
+        <div class="section-heading center narrow">
+          <span class="eyebrow">Booking Page</span>
+          <h2>Choose services, see the total, then book</h2>
+          <p>Tap + to add services and − to reduce or remove them. Total updates instantly.</p>
+        </div>
       </div>
+    </section>
 
-      <div class="booking-layout">
-        <section class="panel">
-          <h3>Make a booking</h3>
-          <p class="muted">Tap + to add services and − to reduce or remove them. Total updates instantly.</p>
-
-          <div id="servicesList"></div>
-
-          <div class="total-card">
-            <span>Total</span>
-            <strong id="bookingTotal">£0</strong>
+    <section class="section compact-top" id="booking-form">
+      <div class="container booking-grid">
+        <section class="panel panel-main">
+          <div class="panel-head">
+            <h3>Make a booking</h3>
+            <p>Select one or more services. The total updates automatically.</p>
           </div>
 
-          <form id="bookingForm" class="booking-form" novalidate>
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="customerName">Your name</label>
-                <input id="customerName" name="customerName" type="text" placeholder="Full name" required />
-              </div>
-              <div class="form-group">
-                <label for="customerPhone">Phone number</label>
-                <input id="customerPhone" name="customerPhone" type="tel" placeholder="07..." required />
-              </div>
-            </div>
+          <div id="service-sections"></div>
 
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="bookingDate">Date</label>
-                <input id="bookingDate" name="bookingDate" type="date" required />
-              </div>
-              <div class="form-group">
-                <label for="bookingTime">Time</label>
-                <select id="bookingTime" name="bookingTime" required>
+          <div class="booking-fields">
+            <div class="total-banner">Total: <strong id="totalAmount">£0</strong></div>
+
+            <label class="field-group">
+              <span>Your name</span>
+              <input id="nameInput" type="text" placeholder="Full name" />
+            </label>
+
+            <label class="field-group">
+              <span>Phone number</span>
+              <input id="phoneInput" type="tel" placeholder="07..." />
+            </label>
+
+            <div class="field-grid two-up">
+              <label class="field-group">
+                <span>Date</span>
+                <select id="dateSelect"></select>
+              </label>
+
+              <label class="field-group">
+                <span>Time</span>
+                <select id="timeSelect">
                   <option value="">Select a time</option>
                 </select>
-              </div>
+              </label>
             </div>
 
-            <div class="form-group">
-              <label for="bookingNotes">Notes</label>
-              <textarea id="bookingNotes" name="bookingNotes" rows="4" placeholder="Optional notes"></textarea>
-            </div>
+            <label class="field-group">
+              <span>Notes</span>
+              <textarea id="notesInput" rows="5" placeholder="Optional notes"></textarea>
+            </label>
+          </div>
 
-            <div class="helper-card">
-              <h4>How it works</h4>
-              <p>Choose services, then select a date. Available times load automatically. If the slot is free, the booking is stored and WhatsApp opens with the same details.</p>
-            </div>
+          <div class="info-box">
+            <h4>How it works</h4>
+            <p>Choose services, then select a date. Available times load automatically. If the slot is free, the booking is stored and WhatsApp opens with the same details.</p>
+          </div>
 
-            <p id="bookingMessage" class="status-message"></p>
+          <p id="statusMessage" class="status-message" aria-live="polite"></p>
 
-            <div class="button-row">
-              <button type="submit" class="btn btn-primary">Save booking + open WhatsApp</button>
-              <button type="button" class="btn btn-secondary" id="clearBookingBtn">Clear</button>
-            </div>
-          </form>
+          <div class="action-row">
+            <button id="saveBookingBtn" class="btn btn-primary btn-large" type="button">Save booking + open WhatsApp</button>
+            <button id="clearBookingBtn" class="btn btn-secondary btn-large" type="button">Clear</button>
+          </div>
         </section>
 
-        <aside class="panel side-panel">
+        <aside class="panel panel-summary">
           <h3>Live summary</h3>
+
           <div class="summary-card">
             <h4>Selected services</h4>
-            <div id="selectedServicesSummary" class="summary-list muted">No services selected yet.</div>
+            <div id="selectedServicesSummary" class="empty-summary">No services selected yet.</div>
           </div>
+
           <div class="summary-card">
             <h4>Date and time</h4>
-            <div id="dateTimeSummary" class="muted">Choose a date first, then a time.</div>
+            <p id="dateTimeSummary">Choose a date and time.</p>
           </div>
+
           <div class="summary-card">
             <h4>Availability check</h4>
-            <div id="availabilitySummary" class="muted">Select a date to load available times.</div>
+            <p id="availabilitySummary">Select a date to load available times.</p>
           </div>
+
           <div class="summary-card">
             <h4>Total</h4>
-            <div id="summaryTotal" class="summary-total">£0</div>
+            <p id="summaryTotal" class="summary-total">£0</p>
           </div>
         </aside>
       </div>
-    </div>
+    </section>
   </main>
 
-  <script src="js/config.js"></script>
   <script src="js/data.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/book.js"></script>

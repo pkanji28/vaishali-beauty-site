@@ -8,7 +8,7 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="container header-inner">
+    <div class="site-header-inner">
       <a class="brand" href="index.html">
         <div class="brand-mark">VB</div>
         <div class="brand-copy">
@@ -16,61 +16,59 @@
           <p>Beauty • Care • Confidence</p>
         </div>
       </a>
+
       <nav class="nav">
         <a href="index.html">Home</a>
         <a href="book.html">Booking</a>
         <a href="feedback.html" class="active">Feedback</a>
         <a href="admin.html">Admin</a>
       </nav>
+
+      <a class="btn btn-primary hide-mobile" href="book.html">Book Now</a>
     </div>
   </header>
 
-  <main class="section">
-    <div class="container feedback-layout">
-      <section class="panel">
-        <div class="section-heading align-left">
-          <span class="eyebrow">Leave Feedback</span>
-          <h2>Share your experience</h2>
-          <p>Feedback is stored first, then can be approved from the admin page before it shows publicly.</p>
+  <main class="page-shell">
+    <section class="section compact-top">
+      <div class="container narrow-page">
+        <div class="section-heading center narrow">
+          <span class="eyebrow">Customer Feedback</span>
+          <h2>Clients can leave feedback after their appointment</h2>
+          <p>Feedback goes to the system first, then can be approved before it shows publicly.</p>
         </div>
 
-        <form id="feedbackForm" class="booking-form" novalidate>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="feedbackName">Your name</label>
-              <input id="feedbackName" type="text" placeholder="Your name" required />
-            </div>
-            <div class="form-group">
-              <label for="feedbackRating">Rating</label>
-              <select id="feedbackRating" required>
-                <option value="">Select rating</option>
-                <option value="5">5 - Excellent</option>
-                <option value="4">4 - Very Good</option>
-                <option value="3">3 - Good</option>
-                <option value="2">2 - Fair</option>
-                <option value="1">1 - Poor</option>
+        <section class="panel form-panel">
+          <h3>Leave feedback</h3>
+          <div class="field-grid two-up">
+            <label class="field-group">
+              <span>Your name</span>
+              <input id="feedbackName" type="text" placeholder="Your name" />
+            </label>
+            <label class="field-group">
+              <span>Rating</span>
+              <select id="feedbackRating">
+                <option value="5">5 stars</option>
+                <option value="4">4 stars</option>
+                <option value="3">3 stars</option>
+                <option value="2">2 stars</option>
+                <option value="1">1 star</option>
               </select>
-            </div>
+            </label>
           </div>
+          <label class="field-group">
+            <span>Your feedback</span>
+            <textarea id="feedbackText" rows="5" placeholder="Tell us about your experience"></textarea>
+          </label>
+          <p id="feedbackStatus" class="status-message"></p>
+          <button id="submitFeedbackBtn" class="btn btn-primary btn-large" type="button">Submit feedback</button>
+        </section>
 
-          <div class="form-group">
-            <label for="feedbackText">Feedback</label>
-            <textarea id="feedbackText" rows="5" placeholder="Write your feedback here..." required></textarea>
-          </div>
-
-          <p id="feedbackMessage" class="status-message"></p>
-
-          <div class="button-row">
-            <button type="submit" class="btn btn-primary">Submit Feedback</button>
-          </div>
-        </form>
-      </section>
-
-      <aside class="panel">
-        <h3>Approved feedback</h3>
-        <div id="approvedFeedbackList" class="stack-list"></div>
-      </aside>
-    </div>
+        <section class="panel form-panel">
+          <h3>Approved feedback</h3>
+          <div id="approvedFeedbackList" class="review-list"></div>
+        </section>
+      </div>
+    </section>
   </main>
 
   <script src="js/storage.js"></script>

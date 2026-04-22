@@ -30,16 +30,6 @@
   </header>
 
   <main class="page-shell">
-    <section class="section compact-top">
-      <div class="container">
-        <div class="section-heading center narrow">
-          <span class="eyebrow">Booking Page</span>
-          <h2>Choose services, see the total, then book</h2>
-          <p>Tap + to add services and − to reduce or remove them. Total updates instantly.</p>
-        </div>
-      </div>
-    </section>
-
     <section class="section compact-top" id="booking-form">
       <div class="container booking-grid">
         <section class="panel panel-main">
@@ -66,7 +56,7 @@
             <div class="field-grid two-up">
               <label class="field-group">
                 <span>Date</span>
-                <select id="dateSelect"></select>
+                <input id="dateInput" type="date" />
               </label>
 
               <label class="field-group">
@@ -85,7 +75,7 @@
 
           <div class="info-box">
             <h4>How it works</h4>
-            <p>Choose services, then select a date. Available times load automatically. If the slot is free, the booking is stored and WhatsApp opens with the same details.</p>
+            <p>Choose services, pick a calendar date, select a time, then save. If the slot is free, the booking is stored and WhatsApp opens with the same details.</p>
           </div>
 
           <p id="statusMessage" class="status-message" aria-live="polite"></p>

@@ -1,46 +1,63 @@
 (function () {
-  const feedbackForm = document.getElementById("feedbackForm");
-  const feedbackMessage = document.getElementById("feedbackMessage");
-  const approvedFeedbackList = document.getElementById("approvedFeedbackList");
+  const list = document.getElementById("approvedFeedbackList");
+  if (!list) return;
+
+  const nameInput = document.getElementById("feedbackName");
+  const ratingInput = document.getElementById("feedbackRating");
+  const textInput = document.getElementById("feedbackText");
+  const submitBtn = document.getElementById("submitFeedbackBtn");
+  const status = document.getElementById("feedbackStatus");
 
   function renderApprovedFeedback() {
-    const items = VBStore.getFeedback().filter(item => item.approved);
-    if (!items.length) {
-      approvedFeedbackList.innerHTML = '<div class="feedback-item"><strong>No approved feedback yet.</strong><small>New approved reviews will appear here.</small></div>';
+    const approved = window.VBStorage.getFeedback().filter(item => item.approved);
+    if (!approved.length) {
+      list.innerHTML = '<p class="empty-summary">No approved feedback yet.</p>';
       return;
     }
-    approvedFeedbackList.innerHTML = items.map(item => `
-      <article class="feedback-item">
-        <strong>${item.name}</strong>
-        <div>${"★".repeat(Number(item.rating))}</div>
+
+    list.innerHTML = approved.map(item => `
+      <article class="review-card">
+        <div class="review-head">
+          <strong>${item.name}</strong>
+          <span>${"★".repeat(Number(item.rating))}</span>
+        </div>
         <p>${item.text}</p>
-        <small>${new Date(item.createdAt).toLocaleDateString()}</small>
       </article>
     `).join("");
   }
 
-  feedbackForm?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    feedbackMessage.textContent = "";
-    feedbackMessage.className = "status-message";
+  function setStatus(text, kind) {
+    status.textContent = text || "";
+    status.className = `status-message ${kind || ""}`.trim();
+  }
 
-    const name = document.getElementById("feedbackName").value.trim();
-    const rating = document.getElementById("feedbackRating").value;
-    const text = document.getElementById("feedbackText").value.trim();
+  submitBtn.addEventListener("click", () => {
+    const name = nameInput.value.trim();
+    const rating = ratingInput.value;
+    const text = textInput.value.trim();
 
-    if (!name || !rating || !text) {
-      feedbackMessage.textContent = "Please complete all feedback fields.";
-      feedbackMessage.classList.add("error");
+    if (!name) {
+      setStatus("Please enter your name.", "error");
+      return;
+    }
+    if (!text) {
+      setStatus("Please enter your feedback.", "error");
       return;
     }
 
-    const items = VBStore.getFeedback();
-    items.unshift({ id: String(Date.now()), name, rating, text, approved: false, createdAt: new Date().toISOString() });
-    VBStore.saveFeedback(items);
+    window.VBStorage.addFeedback({
+      id: `feedback_${Date.now()}`,
+      name,
+      rating,
+      text,
+      approved: false,
+      createdAt: new Date().toISOString()
+    });
 
-    feedbackMessage.textContent = "Feedback submitted. It will appear publicly after approval.";
-    feedbackMessage.classList.add("success");
-    feedbackForm.reset();
+    nameInput.value = "";
+    textInput.value = "";
+    ratingInput.value = "5";
+    setStatus("Feedback sent for approval.", "success");
     renderApprovedFeedback();
   });
 

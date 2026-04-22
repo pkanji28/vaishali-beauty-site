@@ -1,159 +1,117 @@
 (function () {
-  const adminPin = (window.VB_CONFIG && window.VB_CONFIG.adminPin) || "1234";
+  const loginPanel = document.getElementById("adminLoginPanel");
+  if (!loginPanel) return;
+
+  const pinInput = document.getElementById("adminPinInput");
+  const loginBtn = document.getElementById("adminLoginBtn");
+  const loginStatus = document.getElementById("adminLoginStatus");
   const adminContent = document.getElementById("adminContent");
-  const adminPinInput = document.getElementById("adminPinInput");
-  const adminLoginBtn = document.getElementById("adminLoginBtn");
-  const adminLogoutBtn = document.getElementById("adminLogoutBtn");
-  const adminLoginMessage = document.getElementById("adminLoginMessage");
-  const adminBookingsList = document.getElementById("adminBookingsList");
-  const adminFeedbackList = document.getElementById("adminFeedbackList");
-  const galleryTitle = document.getElementById("galleryTitle");
-  const galleryFile = document.getElementById("galleryFile");
-  const saveGalleryBtn = document.getElementById("saveGalleryBtn");
-  const galleryMessage = document.getElementById("galleryMessage");
-  const galleryGrid = document.getElementById("galleryGrid");
+  const logoutBtn = document.getElementById("adminLogoutBtn");
+  const bookingList = document.getElementById("bookingList");
+  const pendingFeedbackList = document.getElementById("pendingFeedbackList");
+  const approvedFeedbackAdminList = document.getElementById("approvedFeedbackAdminList");
 
-  function updateAccess() {
-    const loggedIn = VBStore.isAdminLoggedIn();
-    adminContent.classList.toggle("hidden", !loggedIn);
-    adminLogoutBtn.classList.toggle("hidden", !loggedIn);
-    adminLoginBtn.classList.toggle("hidden", loggedIn);
-    adminPinInput.classList.toggle("hidden", loggedIn);
+  function setStatus(text, kind) {
+    loginStatus.textContent = text || "";
+    loginStatus.className = `status-message ${kind || ""}`.trim();
   }
 
-  function renderBookings() {
-    const items = VBStore.getBookings();
-    if (!items.length) {
-      adminBookingsList.innerHTML = '<div class="admin-item"><strong>No bookings yet.</strong></div>';
-      return;
-    }
-    adminBookingsList.innerHTML = items.map(item => `
-      <article class="admin-item">
-        <strong>${item.customerName}</strong>
-        <div>${item.date} at ${item.time}</div>
-        <div>${item.customerPhone}</div>
-        <div>Total: £${item.total}</div>
-        <small>${item.services.map(s => `${s.name} × ${s.quantity}`).join(", ")}</small>
-        <small>Notes: ${item.notes || "None"}</small>
-        <div class="button-row"><button class="btn btn-secondary delete-booking" data-id="${item.id}">Delete</button></div>
+  function bookingHtml(item) {
+    return `
+      <article class="admin-card">
+        <div class="admin-card-head">
+          <strong>${item.name}</strong>
+          <button class="btn btn-secondary small-btn" data-remove-booking="${item.id}" type="button">Delete</button>
+        </div>
+        <p><strong>Phone:</strong> ${item.phone}</p>
+        <p><strong>Date:</strong> ${item.date}</p>
+        <p><strong>Time:</strong> ${item.time}</p>
+        <p><strong>Services:</strong> ${item.services.map(service => `${service.name}${service.quantity > 1 ? ` × ${service.quantity}` : ""}`).join(", ")}</p>
+        <p><strong>Total:</strong> £${item.total}</p>
+        ${item.notes ? `<p><strong>Notes:</strong> ${item.notes}</p>` : ""}
       </article>
-    `).join("");
-
-    document.querySelectorAll(".delete-booking").forEach(btn => {
-      btn.addEventListener("click", () => {
-        VBStore.saveBookings(VBStore.getBookings().filter(item => item.id !== btn.dataset.id));
-        renderBookings();
-      });
-    });
+    `;
   }
 
-  function renderFeedback() {
-    const items = VBStore.getFeedback();
-    if (!items.length) {
-      adminFeedbackList.innerHTML = '<div class="admin-item"><strong>No feedback yet.</strong></div>';
-      return;
-    }
-    adminFeedbackList.innerHTML = items.map(item => `
-      <article class="admin-item">
-        <strong>${item.name}</strong>
-        <div>${"★".repeat(Number(item.rating))}</div>
+  function feedbackHtml(item, pending) {
+    return `
+      <article class="admin-card">
+        <div class="admin-card-head">
+          <strong>${item.name}</strong>
+          <div class="mini-actions">
+            ${pending ? `<button class="btn btn-primary small-btn" data-approve-feedback="${item.id}" type="button">Approve</button>` : ""}
+            <button class="btn btn-secondary small-btn" data-remove-feedback="${item.id}" type="button">Delete</button>
+          </div>
+        </div>
+        <p><strong>Rating:</strong> ${item.rating} / 5</p>
         <p>${item.text}</p>
-        <small>${new Date(item.createdAt).toLocaleString()}</small>
-        <div class="button-row">
-          <button class="btn btn-secondary toggle-feedback" data-id="${item.id}">${item.approved ? "Unapprove" : "Approve"}</button>
-          <button class="btn btn-secondary delete-feedback" data-id="${item.id}">Delete</button>
-        </div>
       </article>
-    `).join("");
-
-    document.querySelectorAll(".toggle-feedback").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const items = VBStore.getFeedback().map(item => item.id === btn.dataset.id ? { ...item, approved: !item.approved } : item);
-        VBStore.saveFeedback(items);
-        renderFeedback();
-      });
-    });
-    document.querySelectorAll(".delete-feedback").forEach(btn => {
-      btn.addEventListener("click", () => {
-        VBStore.saveFeedback(VBStore.getFeedback().filter(item => item.id !== btn.dataset.id));
-        renderFeedback();
-      });
-    });
+    `;
   }
 
-  function renderGallery() {
-    const items = VBStore.getGallery();
-    if (!items.length) {
-      galleryGrid.innerHTML = '<div class="admin-item"><strong>No images uploaded yet.</strong></div>';
-      return;
-    }
-    galleryGrid.innerHTML = items.map(item => `
-      <div class="gallery-tile">
-        <img src="${item.dataUrl}" alt="${item.title}">
-        <div class="tile-body">
-          <span>${item.title}</span>
-          <button class="btn btn-secondary delete-gallery" data-id="${item.id}">Delete</button>
-        </div>
-      </div>
-    `).join("");
+  function renderAdmin() {
+    const bookings = window.VBStorage.getBookings();
+    const feedback = window.VBStorage.getFeedback();
+    const pending = feedback.filter(item => !item.approved);
+    const approved = feedback.filter(item => item.approved);
 
-    document.querySelectorAll(".delete-gallery").forEach(btn => {
-      btn.addEventListener("click", () => {
-        VBStore.saveGallery(VBStore.getGallery().filter(item => item.id !== btn.dataset.id));
-        renderGallery();
-      });
-    });
+    bookingList.innerHTML = bookings.length
+      ? bookings.map(bookingHtml).join("")
+      : '<p class="empty-summary">No saved bookings yet.</p>';
+
+    pendingFeedbackList.innerHTML = pending.length
+      ? pending.map(item => feedbackHtml(item, true)).join("")
+      : '<p class="empty-summary">No pending feedback.</p>';
+
+    approvedFeedbackAdminList.innerHTML = approved.length
+      ? approved.map(item => feedbackHtml(item, false)).join("")
+      : '<p class="empty-summary">No approved feedback yet.</p>';
   }
 
-  adminLoginBtn?.addEventListener("click", () => {
-    adminLoginMessage.textContent = "";
-    adminLoginMessage.className = "status-message";
-    if (adminPinInput.value === adminPin) {
-      VBStore.setAdminSession(true);
-      adminPinInput.value = "";
-      updateAccess();
-      renderBookings();
-      renderFeedback();
-      renderGallery();
+  function updateView() {
+    const authed = window.VBStorage.isAdminAuthed();
+    loginPanel.classList.toggle("hidden", authed);
+    adminContent.classList.toggle("hidden", !authed);
+    if (authed) renderAdmin();
+  }
+
+  loginBtn.addEventListener("click", () => {
+    if (pinInput.value === window.VB_ADMIN_PIN) {
+      window.VBStorage.setAdminAuthed(true);
+      pinInput.value = "";
+      setStatus("", "");
+      updateView();
     } else {
-      adminLoginMessage.textContent = "Incorrect PIN.";
-      adminLoginMessage.classList.add("error");
+      setStatus("Incorrect PIN.", "error");
     }
   });
 
-  adminLogoutBtn?.addEventListener("click", () => {
-    VBStore.setAdminSession(false);
-    updateAccess();
+  logoutBtn.addEventListener("click", () => {
+    window.VBStorage.setAdminAuthed(false);
+    updateView();
   });
 
-  saveGalleryBtn?.addEventListener("click", () => {
-    galleryMessage.textContent = "";
-    galleryMessage.className = "status-message";
-    const title = galleryTitle.value.trim();
-    const file = galleryFile.files[0];
-    if (!title || !file) {
-      galleryMessage.textContent = "Please add a title and choose an image.";
-      galleryMessage.classList.add("error");
+  document.addEventListener("click", event => {
+    const removeBookingId = event.target.getAttribute("data-remove-booking");
+    if (removeBookingId) {
+      window.VBStorage.removeBooking(removeBookingId);
+      renderAdmin();
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const items = VBStore.getGallery();
-      items.unshift({ id: String(Date.now()), title, dataUrl: reader.result });
-      VBStore.saveGallery(items);
-      galleryTitle.value = "";
-      galleryFile.value = "";
-      galleryMessage.textContent = "Image saved.";
-      galleryMessage.classList.add("success");
-      renderGallery();
-    };
-    reader.readAsDataURL(file);
+
+    const approveFeedbackId = event.target.getAttribute("data-approve-feedback");
+    if (approveFeedbackId) {
+      window.VBStorage.updateFeedback(approveFeedbackId, { approved: true });
+      renderAdmin();
+      return;
+    }
+
+    const removeFeedbackId = event.target.getAttribute("data-remove-feedback");
+    if (removeFeedbackId) {
+      window.VBStorage.removeFeedback(removeFeedbackId);
+      renderAdmin();
+    }
   });
 
-  updateAccess();
-  if (VBStore.isAdminLoggedIn()) {
-    renderBookings();
-    renderFeedback();
-    renderGallery();
-  }
+  updateView();
 })();

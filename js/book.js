@@ -17,7 +17,7 @@
   const dateTimeSummary = document.getElementById("dateTimeSummary");
   const availabilitySummary = document.getElementById("availabilitySummary");
   const statusMessage = document.getElementById("statusMessage");
-  const dateSelect = document.getElementById("dateSelect");
+  const dateInput = document.getElementById("dateInput");
   const timeSelect = document.getElementById("timeSelect");
   const nameInput = document.getElementById("nameInput");
   const phoneInput = document.getElementById("phoneInput");
@@ -30,13 +30,13 @@
   }
 
   function getAllServices() {
-    return window.VB_SERVICE_CATEGORIES.flatMap(category => category.services);
+    return window.VB_SERVICE_CATEGORIES.flatMap((category) => category.services);
   }
 
   function getSelectedServices() {
     return getAllServices()
-      .map(service => ({ ...service, quantity: state.quantities[service.id] || 0 }))
-      .filter(service => service.quantity > 0);
+      .map((service) => ({ ...service, quantity: state.quantities[service.id] || 0 }))
+      .filter((service) => service.quantity > 0);
   }
 
   function getTotal() {
@@ -63,36 +63,30 @@
     statusMessage.className = `status-message ${kind || ""}`.trim();
   }
 
-  function renderDateOptions() {
+  function setupDateInput() {
     const today = new Date();
-    const options = ['<option value="">Select a date</option>'];
+    const maxDate = new Date(today);
+    maxDate.setDate(today.getDate() + 20);
 
-    for (let i = 0; i < 21; i += 1) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      const value = date.toISOString().slice(0, 10);
-      options.push(`<option value="${value}">${date.toLocaleDateString("en-GB")}</option>`);
-    }
-
-    dateSelect.innerHTML = options.join("");
+    dateInput.min = today.toISOString().slice(0, 10);
+    dateInput.max = maxDate.toISOString().slice(0, 10);
   }
 
   function refreshAvailableTimes() {
     const existing = window.VBStorage.getBookings();
     const bookedForDate = new Set(
-      existing
-        .filter(item => item.date === state.date)
-        .map(item => item.time)
+      existing.filter((item) => item.date === state.date).map((item) => item.time)
     );
 
     const options = ['<option value="">Select a time</option>'];
-    window.VB_TIME_SLOTS.forEach(slot => {
-      const disabled = bookedForDate.has(slot) ? ' disabled' : '';
+    window.VB_TIME_SLOTS.forEach((slot) => {
+      const disabled = bookedForDate.has(slot) ? " disabled" : "";
       const label = bookedForDate.has(slot) ? `${slot} (Booked)` : slot;
       options.push(`<option value="${slot}"${disabled}>${label}</option>`);
     });
 
     timeSelect.innerHTML = options.join("");
+
     if (!state.date) {
       availabilitySummary.textContent = "Select a date to load available times.";
     } else {
@@ -101,11 +95,11 @@
   }
 
   function renderServices() {
-    servicesRoot.innerHTML = window.VB_SERVICE_CATEGORIES.map(category => `
+    servicesRoot.innerHTML = window.VB_SERVICE_CATEGORIES.map((category) => `
       <section class="service-section">
         <h4 class="service-category-title">${category.title}</h4>
         <div class="service-list">
-          ${category.services.map(service => {
+          ${category.services.map((service) => {
             const qty = state.quantities[service.id] || 0;
             return `
               <article class="service-item-card">
@@ -139,7 +133,7 @@
     if (!selected.length) {
       selectedServicesSummary.innerHTML = '<p class="empty-summary">No services selected yet.</p>';
     } else {
-      selectedServicesSummary.innerHTML = selected.map(item => `
+      selectedServicesSummary.innerHTML = selected.map((item) => `
         <div class="summary-line">
           <span>${item.name} × ${item.quantity}</span>
           <strong>${currency(item.price * item.quantity)}</strong>
@@ -160,7 +154,7 @@
     state.name = nameInput.value;
     state.phone = phoneInput.value;
     state.notes = notesInput.value;
-    state.date = dateSelect.value;
+    state.date = dateInput.value;
     state.time = timeSelect.value;
   }
 
@@ -177,7 +171,7 @@
 
   function buildWhatsAppMessage() {
     const selected = getSelectedServices();
-    const serviceLines = selected.map(item => `• ${item.name}${item.quantity > 1 ? ` × ${item.quantity}` : ""}`);
+    const serviceLines = selected.map((item) => `• ${item.name}${item.quantity > 1 ? ` × ${item.quantity}` : ""}`);
     const notesLine = state.notes.trim() ? `📝 Notes: ${state.notes.trim()}` : "";
 
     return [
@@ -196,7 +190,8 @@
       ...(notesLine ? ["", notesLine] : []),
       "",
       "Please confirm my appointment. Thank you 😊"
-    ].join("\n");
+    ].join("
+");
   }
 
   function openWhatsApp() {
@@ -216,7 +211,7 @@
     nameInput.value = "";
     phoneInput.value = "";
     notesInput.value = "";
-    dateSelect.value = "";
+    dateInput.value = "";
     refreshAvailableTimes();
     timeSelect.value = "";
     setStatus("", "");
@@ -232,7 +227,7 @@
     }
 
     const existing = window.VBStorage.getBookings();
-    const clash = existing.find(item => item.date === state.date && item.time === state.time);
+    const clash = existing.find((item) => item.date === state.date && item.time === state.time);
     if (clash) {
       setStatus("That time has already been booked. Please choose another time.", "error");
       refreshAvailableTimes();
@@ -258,7 +253,7 @@
     openWhatsApp();
   }
 
-  servicesRoot.addEventListener("click", event => {
+  servicesRoot.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-id]");
     if (!button) return;
 
@@ -278,14 +273,14 @@
     renderSummary();
   });
 
-  [nameInput, phoneInput, notesInput].forEach(input => {
+  [nameInput, phoneInput, notesInput].forEach((input) => {
     input.addEventListener("input", () => {
       syncInputsToState();
       renderSummary();
     });
   });
 
-  dateSelect.addEventListener("change", () => {
+  dateInput.addEventListener("change", () => {
     syncInputsToState();
     state.time = "";
     refreshAvailableTimes();
@@ -301,7 +296,7 @@
   clearBtn.addEventListener("click", resetForm);
   saveBtn.addEventListener("click", handleSaveBooking);
 
-  renderDateOptions();
+  setupDateInput();
   refreshAvailableTimes();
   renderServices();
   renderSummary();

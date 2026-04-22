@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin | Vaishali's Beauty</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" href="index.html">
+        <div class="brand-mark">VB</div>
+        <div class="brand-copy">
+          <h1>Vaishali's Beauty</h1>
+          <p>Beauty • Care • Confidence</p>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="book.html">Booking</a>
+        <a href="feedback.html">Feedback</a>
+        <a href="admin.html" class="active">Admin</a>
+      </nav>
+
+      <a class="btn btn-primary hide-mobile" href="book.html">Book Now</a>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="section compact-top">
+      <div class="container narrow-page admin-page">
+        <div class="section-heading center narrow">
+          <span class="eyebrow">Private Admin</span>
+          <h2>Manage bookings and feedback</h2>
+          <p>Default PIN: <strong>1234</strong>. Change it later in code if you want.</p>
+        </div>
+
+        <section id="adminLoginPanel" class="panel form-panel">
+          <h3>Admin login</h3>
+          <label class="field-group">
+            <span>Enter PIN</span>
+            <input id="adminPinInput" type="password" placeholder="PIN" />
+          </label>
+          <p id="adminLoginStatus" class="status-message"></p>
+          <button id="adminLoginBtn" class="btn btn-primary btn-large" type="button">Unlock admin</button>
+        </section>
+
+        <div id="adminContent" class="admin-content hidden">
+          <section class="panel form-panel">
+            <div class="admin-head">
+              <h3>Saved bookings</h3>
+              <button id="adminLogoutBtn" class="btn btn-secondary" type="button">Logout</button>
+            </div>
+            <div id="bookingList" class="admin-list"></div>
+          </section>
+
+          <section class="panel form-panel">
+            <h3>Pending feedback</h3>
+            <div id="pendingFeedbackList" class="admin-list"></div>
+          </section>
+
+          <section class="panel form-panel">
+            <h3>Approved feedback</h3>
+            <div id="approvedFeedbackAdminList" class="admin-list"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/storage.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

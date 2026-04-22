@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book | Vaishali's Beauty</title>
+  <meta name="description" content="Choose services, set quantities and confirm your booking on WhatsApp." />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" href="index.html" aria-label="Vaishali's Beauty home">
+        <div class="brand-mark">VB</div>
+        <div class="brand-copy">
+          <h1>Vaishali's Beauty</h1>
+          <p>Beauty • Care • Confidence</p>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="book.html" class="active">Booking</a>
+        <a href="feedback.html">Feedback</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+
+      <a class="btn btn-primary hide-mobile" href="#booking-form">Book Now</a>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="section compact-top" id="booking-form">
+      <div class="container booking-grid">
+        <section class="panel panel-main">
+          <div class="panel-head">
+            <h3>Make a booking</h3>
+            <p>Select one or more services. The total updates automatically.</p>
+          </div>
+
+          <div id="service-sections"></div>
+
+          <div class="booking-fields">
+            <div class="total-banner">Total: <strong id="totalAmount">£0</strong></div>
+
+            <label class="field-group">
+              <span>Your name</span>
+              <input id="nameInput" type="text" placeholder="Full name" />
+            </label>
+
+            <label class="field-group">
+              <span>Phone number</span>
+              <input id="phoneInput" type="tel" placeholder="07..." />
+            </label>
+
+            <div class="field-grid two-up">
+              <label class="field-group">
+                <span>Date</span>
+                <input id="dateInput" type="date" />
+              </label>
+
+              <label class="field-group">
+                <span>Time</span>
+                <select id="timeSelect">
+                  <option value="">Select a time</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="field-group">
+              <span>Notes</span>
+              <textarea id="notesInput" rows="5" placeholder="Optional notes"></textarea>
+            </label>
+          </div>
+
+          <div class="info-box">
+            <h4>How it works</h4>
+            <p>Choose services, pick a calendar date, select a time, then save. If the slot is free, the booking is stored and WhatsApp opens with the same details.</p>
+          </div>
+
+          <p id="statusMessage" class="status-message" aria-live="polite"></p>
+
+          <div class="action-row">
+            <button id="saveBookingBtn" class="btn btn-primary btn-large" type="button">Save booking + open WhatsApp</button>
+            <button id="clearBookingBtn" class="btn btn-secondary btn-large" type="button">Clear</button>
+          </div>
+        </section>
+
+        <aside class="panel panel-summary">
+          <h3>Live summary</h3>
+
+          <div class="summary-card">
+            <h4>Selected services</h4>
+            <div id="selectedServicesSummary" class="empty-summary">No services selected yet.</div>
+          </div>
+
+          <div class="summary-card">
+            <h4>Date and time</h4>
+            <p id="dateTimeSummary">Choose a date and time.</p>
+          </div>
+
+          <div class="summary-card">
+            <h4>Availability check</h4>
+            <p id="availabilitySummary">Select a date to load available times.</p>
+          </div>
+
+          <div class="summary-card">
+            <h4>Total</h4>
+            <p id="summaryTotal" class="summary-total">£0</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/book.js"></script>
+</body>
+</html>

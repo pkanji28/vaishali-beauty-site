@@ -1023,3 +1023,57 @@ button,input,select,textarea{font:inherit}
     font-size:21px !important;
   }
 }
+/* ---------- FINAL V3.4 ADMIN + PAGE SPACING FIX ---------- */
+
+/* Remove extra top spacing under header */
+.hero,
+.admin-hero{
+  margin-top:0 !important;
+  padding-top:12px !important;
+}
+
+/* Fix overall page spacing */
+.admin-page{
+  padding-top:10px !important;
+  padding-bottom:20px !important;
+  gap:14px !important;
+}
+
+/* Reduce big card spacing (Admin + Booking consistency) */
+.simple-card,
+.admin-hero,
+.booking-main{
+  padding:20px !important;
+}
+
+/* Reduce gap between sections */
+.section,
+.section-soft{
+  padding:14px 0 24px !important;
+}
+
+/* Fix extra white gap under header button */
+.site-header + *{
+  margin-top:0 !important;
+}
+
+/* Tighten cards spacing */
+.admin-list-wrap,
+.admin-toolbar{
+  padding:16px !important;
+}
+
+/* Mobile fine-tune */
+@media (max-width:760px){
+  .admin-page{
+    gap:12px !important;
+  }
+
+  .simple-card{
+    padding:18px !important;
+  }
+
+  .admin-hero{
+    padding:18px !important;
+  }
+}

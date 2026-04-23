@@ -1,1 +1,1 @@
-/* Homepage JS reserved for future safe enhancements. */
+/* Reserved for future homepage enhancements. */

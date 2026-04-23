@@ -861,5 +861,22 @@ button,input,select,textarea{font:inherit}
     min-width: 20px;
     font-size: 21px;
   }
+  
+  @media (max-width:760px){
+  .site-header-inner .header-right,
+  .site-header-inner .header-book-btn{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-left:0;
+  }
+
+  .site-header-inner .header-book-btn{
+    width:240px;
+    max-width:240px;
+    margin:14px auto 26px auto;
+  }
+  }
 }
 }

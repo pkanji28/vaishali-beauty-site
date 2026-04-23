@@ -7,7 +7,7 @@
   const supabase = window.supabaseClient;
 
   console.log("window.supabaseClient =", window.supabaseClient);
-  console.log("supabase =", supabase);";
+  console.log("supabase =", supabase);
 
   const servicesMount = document.getElementById("servicesMount");
   if (!servicesMount) return;

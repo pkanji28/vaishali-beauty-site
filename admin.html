@@ -1,56 +1,106 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin | Vaishali's Beauty</title>
-  <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <header class="site-header">
-    <div class="site-header-inner">
+    <div class="container header-inner">
       <a class="brand" href="index.html">
-        <img class="brand-logo" src="assets/logo-main.png" alt="Vaishali's Beauty logo">
+        <img src="assets/logo-main.png" alt="Vaishali's Beauty" class="brand-logo" />
         <div class="brand-copy">
           <h1>Vaishali's Beauty</h1>
           <p>Beauty • Care • Confidence</p>
         </div>
       </a>
-      <div class="header-right">
-        <nav class="nav">
-          <a href="index.html">Home</a>
-          <a href="book.html">Booking</a>
-          <a href="feedback.html">Feedback</a>
-          <a class="active" href="admin.html">Admin</a>
-        </nav>
-      </div>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="book.html">Booking</a>
+        <a href="feedback.html">Feedback</a>
+        <a href="admin.html" class="active">Admin</a>
+      </nav>
+
+      <a class="btn btn-primary hide-mobile" href="book.html">Book Now</a>
     </div>
   </header>
 
-  <main class="section">
-    <div class="container simple-page">
-      <section class="card simple-card">
-        <div class="section-heading">
-          <span class="eyebrow">Admin</span>
-          <h2>Bookings and feedback</h2>
-          <p>This build keeps the admin view simple and consistent.</p>
+  <main class="page-shell">
+    <section class="container admin-page">
+      <div class="card admin-hero">
+        <div>
+          <p class="eyebrow">Admin dashboard</p>
+          <h2>Manage live bookings</h2>
+          <p class="lead">
+            View upcoming appointments, update statuses, and remove cancelled bookings.
+          </p>
+        </div>
+      </div>
+
+      <div class="admin-toolbar card-soft">
+        <div class="toolbar-group">
+          <label for="adminStatusFilter">Status</label>
+          <select id="adminStatusFilter">
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
         </div>
 
-        <div class="admin-columns">
-          <div class="card-soft admin-box">
-            <h3>Bookings</h3>
-            <div id="adminBookings"></div>
-          </div>
-          <div class="card-soft admin-box">
-            <h3>Feedback</h3>
-            <div id="adminFeedback"></div>
-          </div>
+        <div class="toolbar-group">
+          <label for="adminDateFilter">Date</label>
+          <input type="date" id="adminDateFilter" />
+        </div>
+
+        <div class="toolbar-group">
+          <label for="adminSearch">Search</label>
+          <input type="text" id="adminSearch" placeholder="Name, phone, service" />
+        </div>
+
+        <div class="toolbar-actions">
+          <button id="refreshAdmin" class="btn btn-secondary" type="button">Refresh</button>
+        </div>
+      </div>
+
+      <div id="adminStatusMessage" class="status-message" aria-live="polite"></div>
+
+      <section class="admin-summary-grid">
+        <div class="summary-card card-soft">
+          <h3>Today</h3>
+          <div id="todayCount" class="summary-big">0</div>
+        </div>
+        <div class="summary-card card-soft">
+          <h3>Upcoming</h3>
+          <div id="upcomingCount" class="summary-big">0</div>
+        </div>
+        <div class="summary-card card-soft">
+          <h3>Pending</h3>
+          <div id="pendingCount" class="summary-big">0</div>
+        </div>
+        <div class="summary-card card-soft">
+          <h3>Total value</h3>
+          <div id="totalValue" class="summary-big">£0</div>
         </div>
       </section>
-    </div>
+
+      <section class="card admin-list-wrap">
+        <div class="section-heading">
+          <h3>All bookings</h3>
+        </div>
+        <div id="adminEmptyState" class="empty-state" hidden>No bookings found.</div>
+        <div id="adminBookingList" class="admin-booking-list"></div>
+      </section>
+    </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>

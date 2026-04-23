@@ -697,11 +697,13 @@ button,input,select,textarea{font:inherit}
   }
 
   .header-right{
-    width:100%;
-    flex-direction:column;
-    align-items:center;
-    gap:12px;
-    margin-left:0;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  margin-left:0;
   }
 
   .nav{
@@ -712,7 +714,11 @@ button,input,select,textarea{font:inherit}
   }
 
   .header-book-btn{
-    min-width:180px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:14px auto 26px auto;
+  max-width:240px;
   }
 
   .hero{

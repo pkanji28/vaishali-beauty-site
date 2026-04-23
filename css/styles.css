@@ -1077,3 +1077,28 @@ button,input,select,textarea{font:inherit}
     padding:18px !important;
   }
 }
+/* ---------- FINAL V3.5 MATCH ADMIN + BOOKING SPACING ---------- */
+
+.admin-page{
+  padding-top:18px !important;
+}
+
+.admin-hero{
+  padding:24px 22px !important;
+  margin-top:0 !important;
+}
+
+.booking-main{
+  padding:24px 22px !important;
+}
+
+.admin-hero .eyebrow,
+.booking-main .eyebrow{
+  margin-bottom:14px !important;
+}
+
+.admin-hero h2,
+.booking-main h2{
+  margin-top:0 !important;
+  margin-bottom:18px !important;
+}

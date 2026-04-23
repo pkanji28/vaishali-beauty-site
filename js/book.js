@@ -1,6 +1,9 @@
 (function () {
   const servicesData = window.VB_SERVICES || [];
-  const whatsappNumber = (window.VB_CONFIG && window.VB_CONFIG.whatsappNumber) || "447000000000";
+  const config = window.VB_CONFIG || {};
+  const primaryNumber = config.primaryNumber || "447599693034";
+  const fallbackNumber = config.fallbackNumber || "447951077118";
+
   const STORAGE_KEY = "vb_bookings_full_corrected";
   const APP_STATE_KEY = "vb_app_state_full_corrected";
 
@@ -16,6 +19,7 @@
   const customerName = document.getElementById("customerName");
   const customerPhone = document.getElementById("customerPhone");
   const bookingNotes = document.getElementById("bookingNotes");
+  const recipientChoice = document.getElementById("recipientChoice");
 
   const summaryServices = document.getElementById("summaryServices");
   const summaryDateTime = document.getElementById("summaryDateTime");
@@ -23,18 +27,37 @@
   const summaryTotal = document.getElementById("summaryTotal");
 
   const quantities = {};
-  servicesData.forEach(group => group.items.forEach(item => quantities[item.id] = 0));
+  servicesData.forEach(group => {
+    group.items.forEach(item => {
+      quantities[item.id] = 0;
+    });
+  });
 
-  function formatMoney(value) { return "£" + Number(value || 0); }
+  function formatMoney(value) {
+    return "£" + Number(value || 0);
+  }
+
+  function sanitiseWhatsAppNumber(number) {
+    return String(number || "").replace(/\D/g, "");
+  }
+
+  function getSelectedRecipientNumber() {
+    if (recipientChoice && recipientChoice.value === "fallback") {
+      return sanitiseWhatsAppNumber(fallbackNumber);
+    }
+    return sanitiseWhatsAppNumber(primaryNumber);
+  }
 
   function generateTimeSlots() {
     const slots = [];
     for (let hour = 8; hour <= 21; hour++) {
       for (let minute = 0; minute <= 30; minute += 30) {
         if (hour === 21 && minute > 0) continue;
+
         const h12 = ((hour + 11) % 12) + 1;
         const ampm = hour < 12 ? "AM" : "PM";
         const mm = String(minute).padStart(2, "0");
+
         slots.push(`${h12}:${mm} ${ampm}`);
       }
     }
@@ -45,16 +68,27 @@
     if (!dateValue) return "";
     const d = new Date(dateValue + "T00:00:00");
     return d.toLocaleDateString("en-GB", {
-      weekday: "long", day: "numeric", month: "long", year: "numeric"
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
     });
   }
 
   function getSelectedServices() {
     const selected = [];
-    servicesData.forEach(group => group.items.forEach(item => {
-      const qty = quantities[item.id] || 0;
-      if (qty > 0) selected.push({ ...item, quantity: qty, lineTotal: qty * item.price });
-    }));
+    servicesData.forEach(group => {
+      group.items.forEach(item => {
+        const qty = quantities[item.id] || 0;
+        if (qty > 0) {
+          selected.push({
+            ...item,
+            quantity: qty,
+            lineTotal: qty * item.price
+          });
+        }
+      });
+    });
     return selected;
   }
 
@@ -63,8 +97,11 @@
   }
 
   function getBookings() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
-    catch (e) { return []; }
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    } catch (e) {
+      return [];
+    }
   }
 
   function saveBookings(bookings) {
@@ -78,40 +115,58 @@
       phone: customerPhone.value,
       date: bookingDate.value,
       time: bookingTime.value,
-      notes: bookingNotes.value
+      notes: bookingNotes.value,
+      recipient: recipientChoice ? recipientChoice.value : "primary"
     }));
   }
 
   function loadAppState() {
     try {
       const state = JSON.parse(localStorage.getItem(APP_STATE_KEY) || "{}");
+
       if (state.quantities) {
-        Object.keys(quantities).forEach(key => quantities[key] = Number(state.quantities[key] || 0));
+        Object.keys(quantities).forEach(key => {
+          quantities[key] = Number(state.quantities[key] || 0);
+        });
       }
+
       customerName.value = state.name || "";
       customerPhone.value = state.phone || "";
       bookingDate.value = state.date || "";
       bookingNotes.value = state.notes || "";
-    } catch (e) {}
+
+      if (recipientChoice) {
+        recipientChoice.value = state.recipient || "primary";
+      }
+    } catch (e) {
+      // ignore
+    }
   }
 
   function setStatus(message, type) {
     bookingStatus.textContent = message || "";
     bookingStatus.className = "status-message";
-    if (type) bookingStatus.classList.add("status-" + type);
+    if (type) {
+      bookingStatus.classList.add("status-" + type);
+    }
   }
 
   function availableTimesForDate(date) {
     if (!date) return [];
     const allSlots = generateTimeSlots();
-    const bookedTimes = getBookings().filter(booking => booking.date === date).map(booking => booking.time);
+    const bookedTimes = getBookings()
+      .filter(booking => booking.date === date)
+      .map(booking => booking.time);
+
     return allSlots.filter(time => !bookedTimes.includes(time));
   }
 
   function refreshTimeOptions() {
     const current = bookingTime.value;
     const available = availableTimesForDate(bookingDate.value);
+
     bookingTime.innerHTML = '<option value="">Select a time</option>';
+
     available.forEach(time => {
       const option = document.createElement("option");
       option.value = time;
@@ -120,22 +175,29 @@
       bookingTime.appendChild(option);
     });
 
-    if (!bookingDate.value) summaryAvailability.textContent = "Choose a date first to load times.";
-    else if (available.length) summaryAvailability.textContent = "Available times loaded successfully.";
-    else summaryAvailability.textContent = "No available times found for this date.";
+    if (!bookingDate.value) {
+      summaryAvailability.textContent = "Choose a date first to load times.";
+    } else if (available.length) {
+      summaryAvailability.textContent = "Available times loaded successfully.";
+    } else {
+      summaryAvailability.textContent = "No available times found for this date.";
+    }
   }
 
   function renderServices() {
     servicesMount.innerHTML = "";
+
     servicesData.forEach(group => {
       const section = document.createElement("section");
       section.className = "service-category";
       section.innerHTML = `<h3>${group.category}</h3>`;
+
       const list = document.createElement("div");
       list.className = "service-list";
 
       group.items.forEach(item => {
         const qty = quantities[item.id] || 0;
+
         const card = document.createElement("div");
         card.className = "service-card";
         card.innerHTML = `
@@ -150,7 +212,8 @@
               <div class="qty-value">${qty}</div>
               <button type="button" class="qty-btn plus" data-id="${item.id}" aria-label="Increase ${item.name}">+</button>
             </div>
-          </div>`;
+          </div>
+        `;
         list.appendChild(card);
       });
 
@@ -158,19 +221,23 @@
       servicesMount.appendChild(section);
     });
 
-    servicesMount.querySelectorAll(".qty-btn.plus").forEach(btn => btn.addEventListener("click", () => {
-      quantities[btn.dataset.id] += 1;
-      saveAppState();
-      renderServices();
-      renderSummary();
-    }));
+    servicesMount.querySelectorAll(".qty-btn.plus").forEach(btn => {
+      btn.addEventListener("click", () => {
+        quantities[btn.dataset.id] += 1;
+        saveAppState();
+        renderServices();
+        renderSummary();
+      });
+    });
 
-    servicesMount.querySelectorAll(".qty-btn.minus").forEach(btn => btn.addEventListener("click", () => {
-      quantities[btn.dataset.id] = Math.max(0, quantities[btn.dataset.id] - 1);
-      saveAppState();
-      renderServices();
-      renderSummary();
-    }));
+    servicesMount.querySelectorAll(".qty-btn.minus").forEach(btn => {
+      btn.addEventListener("click", () => {
+        quantities[btn.dataset.id] = Math.max(0, quantities[btn.dataset.id] - 1);
+        saveAppState();
+        renderServices();
+        renderSummary();
+      });
+    });
   }
 
   function renderSummary() {
@@ -178,6 +245,7 @@
     summaryTotal.textContent = formatMoney(getTotal());
 
     const selected = getSelectedServices();
+
     if (!selected.length) {
       summaryServices.className = "summary-list empty";
       summaryServices.textContent = "No services selected yet.";
@@ -187,7 +255,8 @@
         <div class="summary-line">
           <span>${item.name} × ${item.quantity}</span>
           <strong>${formatMoney(item.lineTotal)}</strong>
-        </div>`).join("");
+        </div>
+      `).join("");
     }
 
     if (bookingDate.value && bookingTime.value) {
@@ -201,6 +270,7 @@
 
   function buildWhatsAppMessage() {
     const selected = getSelectedServices();
+
     const serviceLines = selected.map(item => {
       const qtyText = item.quantity > 1 ? ` x ${item.quantity}` : "";
       return `• ${item.name}${qtyText}`;
@@ -238,6 +308,12 @@
     return "";
   }
 
+  function openWhatsApp(message) {
+    const number = getSelectedRecipientNumber();
+    const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     setStatus("", "");
@@ -255,6 +331,7 @@
       date: bookingDate.value,
       time: bookingTime.value,
       notes: bookingNotes.value.trim(),
+      recipient: recipientChoice ? recipientChoice.value : "primary",
       services: getSelectedServices(),
       total: getTotal(),
       createdAt: new Date().toISOString()
@@ -262,6 +339,7 @@
 
     const bookings = getBookings();
     const clash = bookings.find(item => item.date === booking.date && item.time === booking.time);
+
     if (clash) {
       setStatus("That time has already been booked. Please choose another time.", "error");
       refreshTimeOptions();
@@ -275,17 +353,24 @@
     renderSummary();
     setStatus("Booking saved. Opening WhatsApp now.", "success");
 
-    const url = `https://wa.me/${String(whatsappNumber).replace(/\D/g, "")}?text=${encodeURIComponent(buildWhatsAppMessage())}`;
-    window.open(url, "_blank");
+    openWhatsApp(buildWhatsAppMessage());
   }
 
   function clearForm() {
-    Object.keys(quantities).forEach(key => quantities[key] = 0);
+    Object.keys(quantities).forEach(key => {
+      quantities[key] = 0;
+    });
+
     customerName.value = "";
     customerPhone.value = "";
     bookingDate.value = "";
     bookingTime.innerHTML = '<option value="">Select a time</option>';
     bookingNotes.value = "";
+
+    if (recipientChoice) {
+      recipientChoice.value = "primary";
+    }
+
     saveAppState();
     renderServices();
     renderSummary();
@@ -313,14 +398,21 @@
     renderSummary();
     setStatus("", "");
   });
+
   bookingTime.addEventListener("change", () => {
     saveAppState();
     renderSummary();
     setStatus("", "");
   });
+
   customerName.addEventListener("input", saveAppState);
   customerPhone.addEventListener("input", saveAppState);
   bookingNotes.addEventListener("input", saveAppState);
+
+  if (recipientChoice) {
+    recipientChoice.addEventListener("change", saveAppState);
+  }
+
   bookingForm.addEventListener("submit", handleSubmit);
   clearBooking.addEventListener("click", clearForm);
 })();

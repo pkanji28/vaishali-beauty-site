@@ -25,7 +25,7 @@ button,input,select,textarea{font:inherit}
 .container{width:min(var(--container),calc(100% - 24px));margin:0 auto}
 .card{background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow)}
 .card-soft{background:var(--surface-soft);border:1px solid var(--border);border-radius:24px;padding:20px}
-.section{padding:34px 0 52px}
+.section{padding:20px 0 28px}
 .section-soft{padding:50px 0;background:linear-gradient(180deg,#f7f4ed 0%, #f3efe6 100%)}
 .eyebrow{display:inline-block;margin-bottom:10px;color:var(--gold-deep);text-transform:uppercase;letter-spacing:.2em;font-size:12px;font-weight:800}
 .section-heading h2,.hero-title,.booking-main h2,.summary-panel h2,.simple-card h2,.feature-card h3,.service-preview-card h3,.price-card h3,.business-copy h2{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.03em}
@@ -129,7 +129,7 @@ button,input,select,textarea{font:inherit}
 .btn-secondary{background:#fff}
 .header-book-btn{min-width:138px}
 
-.hero{padding:40px 0 22px}
+.hero{padding:16px 0 8px}
 .hero-grid{
   padding:28px;
   display:grid;
@@ -726,7 +726,7 @@ button,input,select,textarea{font:inherit}
   }
 
   .hero-grid{
-    padding:20px;
+    padding:18px;
   }
 
   .hero-title{
@@ -877,6 +877,26 @@ button,input,select,textarea{font:inherit}
     max-width:240px;
     margin:14px auto 26px auto;
   }
+    /* Force center Book Now everywhere */
+.site-header-inner{
+  flex-direction:column;
+  align-items:center;
+}
+
+.site-header-inner .header-right{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+.site-header-inner .header-book-btn{
+  display:block;
+  margin:16px auto 26px auto;
+  width:240px;
+  text-align:center;
+}
   }
 }
 }

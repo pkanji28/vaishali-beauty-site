@@ -1028,7 +1028,10 @@ button,input,select,textarea{font:inherit}
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 220px;
+  width: 220px !important;
+  max-width: 220px !important;
+  min-width: 0 !important;
+  align-self: center !important;   /* ← stops flexbox stretching it */
   min-height: 48px;
   padding: 0 28px;
   margin: 4px auto 20px auto;

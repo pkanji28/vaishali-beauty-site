@@ -300,15 +300,18 @@
       return;
     }
 
-    const payload = {
+    const selectedServices = getSelectedServices();
+const serviceText = selectedServices
+  .map(item => `${item.name}${item.quantity > 1 ? ` x ${item.quantity}` : ""}`)
+  .join(", ");
+
+const payload = {
   customer_name: customerName.value.trim(),
   customer_phone: customerPhone.value.trim(),
+  service: serviceText,
+  total: getTotal(),
   booking_date: bookingDate.value,
   booking_time: bookingTime.value,
-  notes: bookingNotes.value.trim(),
-  recipient: recipientChoice ? recipientChoice.value : "primary",
-  services_json: getSelectedServices(),
-  total_amount: getTotal(),
   status: "pending"
 };
 

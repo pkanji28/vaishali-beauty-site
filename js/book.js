@@ -1,10 +1,13 @@
 (function () {
   const servicesData = window.VB_SERVICES || [];
   const config = window.VB_CONFIG || {};
-  const supabase = window.supabaseClient;
-
   const primaryNumber = config.primaryNumber || "447599693034";
   const fallbackNumber = config.fallbackNumber || "447951077118";
+
+  const supabase = window.supabaseClient;
+
+  console.log("window.supabaseClient =", window.supabaseClient);
+  console.log("supabase =", supabase);";
 
   const servicesMount = document.getElementById("servicesMount");
   if (!servicesMount) return;

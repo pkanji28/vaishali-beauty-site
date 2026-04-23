@@ -1,11 +1,11 @@
 (function () {
   const servicesData = window.VB_SERVICES || [];
   const config = window.VB_CONFIG || {};
-  const primaryNumber = config.primaryNumber || "447599693034";
-  const fallbackNumber = config.fallbackNumber || "447951077118";
 
-  const STORAGE_KEY = "vb_bookings_full_corrected";
-  const APP_STATE_KEY = "vb_app_state_full_corrected";
+  const supabase = window.supabaseClient;
+
+  const primaryNumber = config.primaryNumber || "447599693034";
+  const fallbackNumber = config.fallbackNumber || "4407951077118";
 
   const servicesMount = document.getElementById("servicesMount");
   if (!servicesMount) return;
@@ -19,7 +19,6 @@
   const customerName = document.getElementById("customerName");
   const customerPhone = document.getElementById("customerPhone");
   const bookingNotes = document.getElementById("bookingNotes");
-  const recipientChoice = document.getElementById("recipientChoice");
 
   const summaryServices = document.getElementById("summaryServices");
   const summaryDateTime = document.getElementById("summaryDateTime");
@@ -33,19 +32,8 @@
     });
   });
 
-  function formatMoney(value) {
-    return "£" + Number(value || 0);
-  }
-
-  function sanitiseWhatsAppNumber(number) {
-    return String(number || "").replace(/\D/g, "");
-  }
-
-  function getSelectedRecipientNumber() {
-    if (recipientChoice && recipientChoice.value === "fallback") {
-      return sanitiseWhatsAppNumber(fallbackNumber);
-    }
-    return sanitiseWhatsAppNumber(primaryNumber);
+  function formatMoney(v) {
+    return "£" + Number(v || 0);
   }
 
   function generateTimeSlots() {
@@ -62,17 +50,6 @@
       }
     }
     return slots;
-  }
-
-  function formatDateForWhatsApp(dateValue) {
-    if (!dateValue) return "";
-    const d = new Date(dateValue + "T00:00:00");
-    return d.toLocaleDateString("en-GB", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    });
   }
 
   function getSelectedServices() {
@@ -93,95 +70,46 @@
   }
 
   function getTotal() {
-    return getSelectedServices().reduce((sum, item) => sum + item.lineTotal, 0);
+    return getSelectedServices().reduce((s, i) => s + i.lineTotal, 0);
   }
 
-  function getBookings() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function saveBookings(bookings) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
-  }
-
-  function saveAppState() {
-    localStorage.setItem(APP_STATE_KEY, JSON.stringify({
-      quantities,
-      name: customerName.value,
-      phone: customerPhone.value,
-      date: bookingDate.value,
-      time: bookingTime.value,
-      notes: bookingNotes.value,
-      recipient: recipientChoice ? recipientChoice.value : "primary"
-    }));
-  }
-
-  function loadAppState() {
-    try {
-      const state = JSON.parse(localStorage.getItem(APP_STATE_KEY) || "{}");
-
-      if (state.quantities) {
-        Object.keys(quantities).forEach(key => {
-          quantities[key] = Number(state.quantities[key] || 0);
-        });
-      }
-
-      customerName.value = state.name || "";
-      customerPhone.value = state.phone || "";
-      bookingDate.value = state.date || "";
-      bookingNotes.value = state.notes || "";
-
-      if (recipientChoice) {
-        recipientChoice.value = state.recipient || "primary";
-      }
-    } catch (e) {
-      // ignore
-    }
-  }
-
-  function setStatus(message, type) {
-    bookingStatus.textContent = message || "";
-    bookingStatus.className = "status-message";
-    if (type) {
-      bookingStatus.classList.add("status-" + type);
-    }
-  }
-
-  function availableTimesForDate(date) {
+  async function availableTimesForDate(date) {
     if (!date) return [];
-    const allSlots = generateTimeSlots();
-    const bookedTimes = getBookings()
-      .filter(booking => booking.date === date)
-      .map(booking => booking.time);
 
-    return allSlots.filter(time => !bookedTimes.includes(time));
+    const allSlots = generateTimeSlots();
+
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('booking_time')
+      .eq('booking_date', date);
+
+    if (error) {
+      console.error(error);
+      return allSlots;
+    }
+
+    const booked = (data || []).map(b => b.booking_time);
+
+    return allSlots.filter(t => !booked.includes(t));
   }
 
-  function refreshTimeOptions() {
+  async function refreshTimeOptions() {
     const current = bookingTime.value;
-    const available = availableTimesForDate(bookingDate.value);
+    const available = await availableTimesForDate(bookingDate.value);
 
     bookingTime.innerHTML = '<option value="">Select a time</option>';
 
     available.forEach(time => {
-      const option = document.createElement("option");
-      option.value = time;
-      option.textContent = time;
-      if (time === current) option.selected = true;
-      bookingTime.appendChild(option);
+      const opt = document.createElement("option");
+      opt.value = time;
+      opt.textContent = time;
+      if (time === current) opt.selected = true;
+      bookingTime.appendChild(opt);
     });
 
-    if (!bookingDate.value) {
-      summaryAvailability.textContent = "Choose a date first to load times.";
-    } else if (available.length) {
-      summaryAvailability.textContent = "Available times loaded successfully.";
-    } else {
-      summaryAvailability.textContent = "No available times found for this date.";
-    }
+    summaryAvailability.textContent = available.length
+      ? "Available times loaded."
+      : "Fully booked.";
   }
 
   function renderServices() {
@@ -189,54 +117,41 @@
 
     servicesData.forEach(group => {
       const section = document.createElement("section");
-      section.className = "service-category";
       section.innerHTML = `<h3>${group.category}</h3>`;
 
-      const list = document.createElement("div");
-      list.className = "service-list";
-
       group.items.forEach(item => {
-        const qty = quantities[item.id] || 0;
+        const qty = quantities[item.id];
 
         const card = document.createElement("div");
-        card.className = "service-card";
         card.innerHTML = `
-          <div class="service-card-main">
-            <div class="service-icon">${group.icon || "✦"}</div>
-            <div class="service-text">
-              <div class="service-name">${item.name}</div>
-              <div class="service-price">${formatMoney(item.price)} each</div>
-            </div>
-            <div class="service-controls">
-              <button type="button" class="qty-btn minus" data-id="${item.id}" aria-label="Decrease ${item.name}">−</button>
-              <div class="qty-value">${qty}</div>
-              <button type="button" class="qty-btn plus" data-id="${item.id}" aria-label="Increase ${item.name}">+</button>
-            </div>
+          <div>
+            ${item.name} (£${item.price})
+            <button data-id="${item.id}" class="minus">-</button>
+            ${qty}
+            <button data-id="${item.id}" class="plus">+</button>
           </div>
         `;
-        list.appendChild(card);
+
+        section.appendChild(card);
       });
 
-      section.appendChild(list);
       servicesMount.appendChild(section);
     });
 
-    servicesMount.querySelectorAll(".qty-btn.plus").forEach(btn => {
-      btn.addEventListener("click", () => {
-        quantities[btn.dataset.id] += 1;
-        saveAppState();
+    document.querySelectorAll(".plus").forEach(btn => {
+      btn.onclick = () => {
+        quantities[btn.dataset.id]++;
         renderServices();
         renderSummary();
-      });
+      };
     });
 
-    servicesMount.querySelectorAll(".qty-btn.minus").forEach(btn => {
-      btn.addEventListener("click", () => {
+    document.querySelectorAll(".minus").forEach(btn => {
+      btn.onclick = () => {
         quantities[btn.dataset.id] = Math.max(0, quantities[btn.dataset.id] - 1);
-        saveAppState();
         renderServices();
         renderSummary();
-      });
+      };
     });
   }
 
@@ -246,173 +161,67 @@
 
     const selected = getSelectedServices();
 
-    if (!selected.length) {
-      summaryServices.className = "summary-list empty";
-      summaryServices.textContent = "No services selected yet.";
-    } else {
-      summaryServices.className = "summary-list";
-      summaryServices.innerHTML = selected.map(item => `
-        <div class="summary-line">
-          <span>${item.name} × ${item.quantity}</span>
-          <strong>${formatMoney(item.lineTotal)}</strong>
-        </div>
-      `).join("");
-    }
+    summaryServices.innerHTML = selected.map(s =>
+      `<div>${s.name} x${s.quantity} = £${s.lineTotal}</div>`
+    ).join("");
 
     if (bookingDate.value && bookingTime.value) {
-      summaryDateTime.textContent = `${formatDateForWhatsApp(bookingDate.value)} at ${bookingTime.value}`;
-    } else if (bookingDate.value) {
-      summaryDateTime.textContent = `${formatDateForWhatsApp(bookingDate.value)} — choose a time`;
-    } else {
-      summaryDateTime.textContent = "Choose a date and time.";
+      summaryDateTime.textContent = `${bookingDate.value} ${bookingTime.value}`;
     }
-  }
-
-  function buildWhatsAppMessage() {
-    const selected = getSelectedServices();
-
-    const serviceLines = selected.map(item => {
-      const qtyText = item.quantity > 1 ? ` x ${item.quantity}` : "";
-      return `• ${item.name}${qtyText}`;
-    });
-
-    const notesLine = bookingNotes.value.trim()
-      ? `📝 Notes: ${bookingNotes.value.trim()}`
-      : "";
-
-    return [
-      `✨✨ Vaishali's Beauty Booking ✨✨`,
-      ``,
-      `👤 Name: ${customerName.value.trim()}`,
-      `📞 Phone: ${customerPhone.value.trim()}`,
-      ``,
-      `🗓️ Date: ${formatDateForWhatsApp(bookingDate.value)}`,
-      `⏰ Time: ${bookingTime.value}`,
-      ``,
-      `💄 Services:`,
-      ...serviceLines,
-      ``,
-      `💷 Total: ${formatMoney(getTotal())}`,
-      ...(notesLine ? ["", notesLine] : []),
-      ``,
-      `Please confirm my appointment. Thank you! 😊`
-    ].join("\n");
   }
 
   function validate() {
-    if (!getSelectedServices().length) return "Please add at least one service.";
-    if (!customerName.value.trim()) return "Please enter your name.";
-    if (!customerPhone.value.trim()) return "Please enter your phone number.";
-    if (!bookingDate.value) return "Please choose a date.";
-    if (!bookingTime.value) return "Please choose a time.";
+    if (!getSelectedServices().length) return "Select service";
+    if (!customerName.value) return "Enter name";
+    if (!customerPhone.value) return "Enter phone";
+    if (!bookingDate.value) return "Select date";
+    if (!bookingTime.value) return "Select time";
     return "";
   }
 
-  function openWhatsApp(message) {
-    const number = getSelectedRecipientNumber();
-    const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
+  function openWhatsApp(msg) {
+    const num = primaryNumber;
+    window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, "_blank");
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    setStatus("", "");
+  async function handleSubmit(e) {
+    e.preventDefault();
 
     const error = validate();
-    if (error) {
-      setStatus(error, "error");
+    if (error) return alert(error);
+
+    const available = await availableTimesForDate(bookingDate.value);
+
+    if (!available.includes(bookingTime.value)) {
+      alert("Time already booked.");
+      await refreshTimeOptions();
       return;
     }
 
-    const booking = {
-      id: "b_" + Date.now(),
-      name: customerName.value.trim(),
-      phone: customerPhone.value.trim(),
-      date: bookingDate.value,
-      time: bookingTime.value,
-      notes: bookingNotes.value.trim(),
-      recipient: recipientChoice ? recipientChoice.value : "primary",
-      services: getSelectedServices(),
-      total: getTotal(),
-      createdAt: new Date().toISOString()
-    };
+    const { error: insertError } = await supabase
+      .from('bookings')
+      .insert([{
+        customer_name: customerName.value,
+        customer_phone: customerPhone.value,
+        booking_date: bookingDate.value,
+        booking_time: bookingTime.value,
+        total: getTotal(),
+        status: 'pending'
+      }]);
 
-    const bookings = getBookings();
-    const clash = bookings.find(item => item.date === booking.date && item.time === booking.time);
-
-    if (clash) {
-      setStatus("That time has already been booked. Please choose another time.", "error");
-      refreshTimeOptions();
+    if (insertError) {
+      alert("Error saving booking");
       return;
     }
 
-    bookings.push(booking);
-    saveBookings(bookings);
-    saveAppState();
-    refreshTimeOptions();
-    renderSummary();
-    setStatus("Booking saved. Opening WhatsApp now.", "success");
-
-    openWhatsApp(buildWhatsAppMessage());
+    openWhatsApp("Booking confirmed");
+    alert("Booking saved!");
+    await refreshTimeOptions();
   }
 
-  function clearForm() {
-    Object.keys(quantities).forEach(key => {
-      quantities[key] = 0;
-    });
-
-    customerName.value = "";
-    customerPhone.value = "";
-    bookingDate.value = "";
-    bookingTime.innerHTML = '<option value="">Select a time</option>';
-    bookingNotes.value = "";
-
-    if (recipientChoice) {
-      recipientChoice.value = "primary";
-    }
-
-    saveAppState();
-    renderServices();
-    renderSummary();
-    setStatus("", "");
-    summaryAvailability.textContent = "Choose a date first to load times.";
-  }
-
-  function initDateMin() {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    bookingDate.min = `${yyyy}-${mm}-${dd}`;
-  }
-
-  loadAppState();
-  initDateMin();
-  renderServices();
-  refreshTimeOptions();
-  renderSummary();
-
-  bookingDate.addEventListener("change", () => {
-    saveAppState();
-    refreshTimeOptions();
-    renderSummary();
-    setStatus("", "");
-  });
-
-  bookingTime.addEventListener("change", () => {
-    saveAppState();
-    renderSummary();
-    setStatus("", "");
-  });
-
-  customerName.addEventListener("input", saveAppState);
-  customerPhone.addEventListener("input", saveAppState);
-  bookingNotes.addEventListener("input", saveAppState);
-
-  if (recipientChoice) {
-    recipientChoice.addEventListener("change", saveAppState);
-  }
-
+  bookingDate.addEventListener("change", refreshTimeOptions);
   bookingForm.addEventListener("submit", handleSubmit);
-  clearBooking.addEventListener("click", clearForm);
+
+  renderServices();
+  renderSummary();
 })();

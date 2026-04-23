@@ -692,6 +692,83 @@ button,input,select,textarea{font:inherit}
   display: flex;
   justify-content: space-between;
   align-items: start;
+.admin-page {
+  display: grid;
+  gap: 20px;
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+.admin-hero {
+  padding: 24px;
+}
+
+.admin-toolbar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+}
+
+.toolbar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toolbar-group label {
+  font-weight: 700;
+}
+
+.toolbar-group input,
+.toolbar-group select {
+  min-height: 52px;
+  border-radius: 18px;
+  border: 1px solid #d8cfbc;
+  padding: 0 16px;
+  background: #fff;
+  font: inherit;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: end;
+}
+
+.admin-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.summary-card {
+  padding: 20px;
+}
+
+.summary-big {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-top: 10px;
+}
+
+.admin-list-wrap {
+  padding: 22px;
+}
+
+.admin-booking-list {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-booking-card {
+  padding: 18px;
+  border: 1px solid #ded4c2;
+}
+
+.admin-booking-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
   gap: 14px;
   margin-bottom: 14px;
 }

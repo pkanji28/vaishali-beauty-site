@@ -301,27 +301,27 @@
     }
 
     const payload = {
-      customer_name: customerName.value.trim(),
-      customer_phone: customerPhone.value.trim(),
-      booking_date: bookingDate.value,
-      booking_time: bookingTime.value,
-      notes: bookingNotes.value.trim(),
-      recipient: recipientChoice ? recipientChoice.value : "primary",
-      services_json: getSelectedServices(),
-      total_amount: getTotal(),
-      status: "pending"
-    };
+  customer_name: customerName.value.trim(),
+  customer_phone: customerPhone.value.trim(),
+  booking_date: bookingDate.value,
+  booking_time: bookingTime.value,
+  notes: bookingNotes.value.trim(),
+  recipient: recipientChoice ? recipientChoice.value : "primary",
+  services_json: getSelectedServices(),
+  total_amount: getTotal(),
+  status: "pending"
+};
 
-    const { error: insertError } = await supabase
-      .from("bookings")
-      .insert([payload]);
+const { error: insertError } = await supabase
+  .from("bookings")
+  .insert([payload]);
 
-    if (insertError) {
-      console.error(insertError);
-      bookingStatus.textContent = "Error saving booking.";
-      bookingStatus.className = "status-message status-error";
-      return;
-    }
+if (insertError) {
+  console.error("Insert error:", insertError);
+  bookingStatus.textContent = `Error saving booking: ${insertError.message}`;
+  bookingStatus.className = "status-message status-error";
+  return;
+}
 
     bookingStatus.textContent = "Booking saved. Opening WhatsApp now.";
     bookingStatus.className = "status-message status-success";

@@ -8,23 +8,24 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="index.html">
-        <img src="assets/logo-main.png" alt="Vaishali's Beauty" class="brand-logo" />
+    <div class="site-header-inner">
+      <a class="brand" href="index.html" aria-label="Vaishali's Beauty home">
+        <img class="brand-logo" src="assets/logo-main.png" alt="Vaishali's Beauty logo" />
         <div class="brand-copy">
           <h1>Vaishali's Beauty</h1>
           <p>Beauty • Care • Confidence</p>
         </div>
       </a>
 
-      <nav class="nav">
-        <a href="index.html">Home</a>
-        <a href="book.html">Booking</a>
-        <a href="feedback.html">Feedback</a>
-        <a href="admin.html" class="active">Admin</a>
-      </nav>
-
-      <a class="btn btn-primary hide-mobile" href="book.html">Book Now</a>
+      <div class="header-right">
+        <nav class="nav" aria-label="Main navigation">
+          <a href="index.html">Home</a>
+          <a href="book.html">Booking</a>
+          <a href="feedback.html">Feedback</a>
+          <a href="admin.html" class="active">Admin</a>
+        </nav>
+        <a class="btn btn-primary header-book-btn" href="book.html">Book Now</a>
+      </div>
     </div>
   </header>
 

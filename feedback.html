@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback | Vaishali's Beauty</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="assets/logo-main.png" alt="Vaishali's Beauty logo">
+        <div class="brand-copy">
+          <h1>Vaishali's Beauty</h1>
+          <p>Beauty • Care • Confidence</p>
+        </div>
+      </a>
+      <div class="header-right">
+        <nav class="nav">
+          <a href="index.html">Home</a>
+          <a href="book.html">Booking</a>
+          <a class="active" href="feedback.html">Feedback</a>
+          <a href="admin.html">Admin</a>
+        </nav>
+        <a class="btn btn-primary header-book-btn" href="book.html">Book Now</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container simple-page">
+      <section class="card simple-card">
+        <div class="section-heading">
+          <span class="eyebrow">Customer Feedback</span>
+          <h2>Leave feedback after your appointment</h2>
+          <p>Share your experience and help strengthen the business presentation.</p>
+        </div>
+
+        <form id="feedbackForm" class="booking-form" novalidate>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="feedbackName">Your name</label>
+              <input id="feedbackName" type="text" placeholder="Your name" required>
+            </div>
+            <div class="form-field">
+              <label for="feedbackRating">Rating</label>
+              <select id="feedbackRating" required>
+                <option value="">Select</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="feedbackMessage">Feedback</label>
+            <textarea id="feedbackMessage" placeholder="Share your experience" required></textarea>
+          </div>
+
+          <div id="feedbackStatus" class="status-message"></div>
+          <button class="btn btn-primary" type="submit">Submit feedback</button>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/feedback.js"></script>
+</body>
+</html>

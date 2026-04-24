@@ -191,8 +191,8 @@ button, input, select, textarea { font: inherit; }
   font-family: Arial, Helvetica, sans-serif;
   box-shadow: 0 8px 20px rgba(199,162,79,.28);
   cursor: pointer;
-  align-self: center;   /* ← add this */
-  text-align: center;   /* ← add this */
+  align-self: center;
+  text-align: center;
 }
 
 .header-book-btn:hover {
@@ -703,4 +703,3 @@ button, input, select, textarea { font: inherit; }
   .admin-toolbar { padding: 14px; }
   .admin-list-wrap { padding: 16px; }
 }
-

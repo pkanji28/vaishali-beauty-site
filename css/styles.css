@@ -1034,7 +1034,9 @@ button,input,select,textarea{font:inherit}
   align-self: center !important;   /* ← stops flexbox stretching it */
   min-height: 48px;
   padding: 0 28px;
-  margin: 4px auto 28px auto;
+  .header-book-btn {
+  margin: 4px auto 36px auto !important;
+  }
   font-size: 16px;
   font-weight: 800;
   border-radius: 999px;

@@ -83,7 +83,7 @@ button, input, select, textarea { font: inherit; }
   letter-spacing: -.03em;
 }
 
-.section-heading h2 { margin: 0 0 12px; font-size: 40px; line-height: 1.06; }
+.section-heading h2 { margin: 0 0 12px; font-size: 32px; line-height: 1.06; }
 .section-heading p  { margin: 0; color: var(--muted); font-size: 17px; }
 .center-heading     { text-align: center; max-width: 760px; margin: 0 auto 28px; }
 
@@ -141,19 +141,17 @@ button, input, select, textarea { font: inherit; }
 /* Nav */
 .header-right {
   width: 100%;
-  display: flex;
-  flex-direction: column;   /* stacks nav ABOVE button */
-  align-items: center;      /* centres both */
-  gap: 10px;
+  display: block;       /* block so text-align:center works on children */
+  text-align: center;
 }
 
 .nav {
-  display: flex;
+  display: inline-flex; /* inline so text-align centers it */
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 26px;
-  margin-bottom: 0;
+  margin-bottom: 10px;
 }
 
 .nav a {
@@ -243,8 +241,8 @@ button, input, select, textarea { font: inherit; }
 }
 
 .hero-copy   { padding: 4px 0; }
-.hero-title  { margin: 0 0 14px; font-size: 66px; line-height: .95; max-width: 660px; }
-.hero-text   { margin: 0; max-width: 680px; color: var(--muted); font-size: 18px; font-family: Arial, Helvetica, sans-serif; }
+.hero-title  { margin: 0 0 14px; font-size: 44px; line-height: 1.05; max-width: 660px; }
+.hero-text   { margin: 0; max-width: 680px; color: var(--muted); font-size: 17px; font-family: Arial, Helvetica, sans-serif; }
 .hero-text-small { margin-top: 10px; }
 
 .hero-actions {
@@ -277,17 +275,23 @@ button, input, select, textarea { font: inherit; }
 
 .logo-card {
   width: min(100%, 420px);
-  min-height: 420px;
-  background: linear-gradient(145deg, #fffdf8 0%, #f3efe6 100%);
-  border: 1px solid var(--border);
-  border-radius: 30px;
+  min-height: 360px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 28px;
 }
 
-.hero-logo-image { max-width: 100%; width: 320px; height: auto; display: block; }
+.hero-logo-image {
+  max-width: 100%;
+  width: 280px;
+  height: auto;
+  display: block;
+  mix-blend-mode: multiply; /* blends white background of PNG into page */
+}
 
 /* ── SERVICES & PRICES ──────────────────────────────────── */
 .services-home-grid,
@@ -377,7 +381,7 @@ button, input, select, textarea { font: inherit; }
 
 .booking-main h2,
 .summary-panel h2,
-.simple-card h2 { margin: 0 0 12px; font-size: 58px; line-height: .98; }
+.simple-card h2 { margin: 0 0 12px; font-size: 40px; line-height: 1.05; }
 
 .booking-main > .section-heading { margin-bottom: 18px; }
 
@@ -400,22 +404,21 @@ button, input, select, textarea { font: inherit; }
   padding: 18px 20px;
 }
 
-.service-card-main {
-  display: grid;
-  grid-template-columns: 90px 1fr auto;
-  gap: 18px;
-  align-items: center;
-}
-
 .service-icon {
-  width: 90px; height: 90px;
-  border-radius: 26px;
+  width: 52px; height: 52px;
+  border-radius: 16px;
   background: #f2ead6;
   color: var(--gold-deep);
   display: flex; align-items: center; justify-content: center;
-  font-size: 34px;
+  font-size: 22px;
 }
 
+.service-card-main {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  gap: 16px;
+  align-items: center;
+}
 .service-text  { min-width: 0; }
 .service-name  { margin: 0 0 8px; font-weight: 800; font-size: 20px; line-height: 1.2; font-family: Arial, Helvetica, sans-serif; }
 .service-price { color: var(--muted); font-size: 17px; font-family: Arial, Helvetica, sans-serif; }

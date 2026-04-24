@@ -175,13 +175,12 @@ button, input, select, textarea { font: inherit; }
 
 /* ── BOOK NOW BUTTON — single definition ────────────────── */
 .header-book-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.header-book-btn {
+  display: block;
   width: 220px;
   min-height: 48px;
   padding: 0 28px;
-  margin: 6px auto 28px auto;
+  margin: 6px auto 28px auto;  /* auto left/right = centered */
   border: none;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--gold) 0%, #d6b462 100%);
@@ -191,8 +190,8 @@ button, input, select, textarea { font: inherit; }
   font-family: Arial, Helvetica, sans-serif;
   box-shadow: 0 8px 20px rgba(199,162,79,.28);
   cursor: pointer;
-  align-self: center;
   text-align: center;
+  line-height: 48px; /* vertically centers text since it's now display:block */
 }
 
 .header-book-btn:hover {

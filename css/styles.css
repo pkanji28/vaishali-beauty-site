@@ -141,17 +141,19 @@ button, input, select, textarea { font: inherit; }
 /* Nav */
 .header-right {
   width: 100%;
-  display: block;       /* block so text-align:center works on children */
-  text-align: center;
+  display: flex;
+  flex-direction: column;   /* stacks nav ABOVE button */
+  align-items: center;      /* centres both */
+  gap: 10px;
 }
 
 .nav {
-  display: inline-flex; /* inline so text-align centers it */
+  display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 26px;
-  margin-bottom: 10px;
+  margin-bottom: 0;
 }
 
 .nav a {

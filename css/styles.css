@@ -296,10 +296,15 @@ button, input, select, textarea { font: inherit; }
 }
 
 /* ── SERVICES & PRICES ──────────────────────────────────── */
-.services-home-grid,
+.services-home-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
 .price-card-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
 
@@ -621,10 +626,13 @@ button, input, select, textarea { font: inherit; }
 @media (max-width: 1100px) {
   .hero-grid,
   .booking-layout,
-  .price-card-grid,
-  .services-home-grid,
   .admin-columns {
     grid-template-columns: 1fr;
+  }
+
+  .services-home-grid,
+  .price-card-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .feature-grid { grid-template-columns: 1fr; }
@@ -672,6 +680,10 @@ button, input, select, textarea { font: inherit; }
   .hero-grid         { padding: 16px; }
   .hero-title        { font-size: 36px; line-height: 1.04; }
   .hero-text         { font-size: 16px; line-height: 1.5; }
+
+  /* Service & price grids — single column on mobile */
+  .services-home-grid,
+  .price-card-grid   { grid-template-columns: 1fr; }
 
   /* Section headings */
   .section-heading h2 { font-size: 30px; }

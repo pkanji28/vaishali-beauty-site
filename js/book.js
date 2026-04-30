@@ -234,17 +234,21 @@
     if (!selected.length) {
       summaryServices.innerHTML = "No services selected yet.";
     } else {
-      summaryServices.innerHTML = selected.map(item => `
-        <div class="summary-line">
-          <span>${item.name}${item.quantity > 1 ? " × " + item.quantity : ""} <small style="color:var(--muted)">⏱ ${item.durationNote || formatDuration(item.lineDuration)}</small></span>
-          <strong>${formatMoney(item.lineTotal)}</strong>
+      summaryServices.innerHTML =
+        selected.map(item => `
+          <div class="summary-line">
+            <span>${item.name}${item.quantity > 1 ? " × " + item.quantity : ""} <small style="color:var(--muted)">⏱ ${item.durationNote || formatDuration(item.lineDuration)}</small></span>
+            <strong>${formatMoney(item.lineTotal)}</strong>
+          </div>
+        `).join("") +
+        `<div class="summary-line" style="border-top:2px solid var(--border);margin-top:8px;padding-top:12px">
+          <span style="font-weight:800">Total</span>
+          <strong style="font-size:20px">${formatMoney(total)}</strong>
         </div>
-      `).join("") + `
-        <div class="summary-line" style="border-top:2px solid var(--border);margin-top:8px;padding-top:12px">
-          <span style="font-weight:800">Total duration</span>
+        <div class="summary-line" style="border-top:none;padding-top:6px">
+          <span style="font-weight:800">Duration</span>
           <strong style="color:var(--gold-deep)">${formatDuration(duration)}</strong>
-        </div>
-      `;
+        </div>`;
     }
 
     if (bookingDate.value && bookingTime.value) {
@@ -256,47 +260,34 @@
     }
   }
 
-  /* ── Validation ────────────────────────────────────────── */
-  function validate() {
-    if (!getSelectedServices().length) return "Select at least one service.";
-    if (!customerName.value.trim())    return "Enter your name.";
-    if (!customerPhone.value.trim())   return "Enter your phone number.";
-    if (!bookingDate.value)            return "Select a date.";
-    if (!bookingTime.value)            return "Select a time.";
-    return "";
-  }
-
   /* ── WhatsApp message ──────────────────────────────────── */
   function buildWhatsAppMessage() {
-    const selected = getSelectedServices();
+    const selected  = getSelectedServices();
+    const totalDur  = getTotalDuration();
+    const notes     = bookingNotes.value.trim();
+
     const serviceLines = selected.map(item => {
-      const qtyText  = item.quantity > 1 ? ` x ${item.quantity}` : "";
-      const durText  = item.durationNote || formatDuration(item.lineDuration);
-      return `• ${item.name}${qtyText} (${durText})`;
+      const qty = item.quantity > 1 ? ` x${item.quantity}` : "";
+      const dur = item.durationNote || formatDuration(item.lineDuration);
+      return `  • ${item.name}${qty} — ${dur}`;
     });
 
-    const totalDur  = getTotalDuration();
-    const notesLine = bookingNotes.value.trim()
-      ? `📝 Notes: ${bookingNotes.value.trim()}`
-      : "";
-
     return [
-      `✨ Vaishali's Beauty Booking ✨`,
+      `✨ Vaishali's Beauty — Booking Request`,
       ``,
-      `👤 Name: ${customerName.value.trim()}`,
-      `📞 Phone: ${customerPhone.value.trim()}`,
+      `👤 ${customerName.value.trim()}`,
+      `📞 ${customerPhone.value.trim()}`,
       ``,
-      `🗓️ Date: ${formatDateForDisplay(bookingDate.value)}`,
-      `⏰ Time: ${bookingTime.value}`,
-      `⏱️ Estimated duration: ${formatDuration(totalDur)}`,
+      `🗓️ ${formatDateForDisplay(bookingDate.value)} at ${bookingTime.value}`,
       ``,
       `💄 Services:`,
       ...serviceLines,
       ``,
       `💷 Total: ${formatMoney(getTotal())}`,
-      ...(notesLine ? ["", notesLine] : []),
+      `⏱️ Duration: ${formatDuration(totalDur)}`,
+      ...(notes ? [``, `📝 ${notes}`] : []),
       ``,
-      `Please confirm my appointment. Thank you! 😊`
+      `Please confirm my appointment — thank you! 😊`
     ].join("\n");
   }
 

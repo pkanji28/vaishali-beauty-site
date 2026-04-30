@@ -424,6 +424,7 @@ button, input, select, textarea { font: inherit; }
 .service-text  { min-width: 0; }
 .service-name  { margin: 0 0 8px; font-weight: 800; font-size: 20px; line-height: 1.2; font-family: Arial, Helvetica, sans-serif; }
 .service-price { color: var(--muted); font-size: 17px; font-family: Arial, Helvetica, sans-serif; }
+.service-duration { color: var(--gold-deep); font-size: 14px; font-weight: 700; }
 
 .service-controls {
   display: flex;
